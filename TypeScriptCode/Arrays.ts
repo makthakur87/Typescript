@@ -41,6 +41,7 @@
     console.log(mixedData); // Output: ["John", 101, true, "Smith", 102, false, "Peter", 103, null, undefined]
 
 // Iterating over arrays using traditional for loop
+    console.log("");
     console.log("Iterating over array using ... for loop:");
     console.log(`total elments: ${fruits.length}`); // Output: 3
     for (let i = 0; i < fruits.length; i++) {
@@ -188,6 +189,188 @@
     let myArray:string[] = ['w','e','l','c','o','m','e'];
     console.log(`myArray as an array: ${myArray}`); // Output: ['w','e','l','c','o','m','e']
     console.log(`myArray as string: ${myArray.toString()}`); // Output: "w,e,l,c,o,m,e"
+
+// Arrays Advanced Method
+// 1. forEach(): method executes  a function once for each element in the array. 
+//      - Does NOT return a new array
+//      - Used primarily for side effects (logging, updating external variables, etc.)
+//      - Cannot break out of the loop early
+//      - The callback function receives three parameters: element, index, and array
+ 
+// Syntax:
+//      array.forEach(function(element, index, array))
+//      - element: The current element being processed in the array
+//      - index (optional): The index of the current element being processed in the array
+//      - array (optional): The array forEach() was called upon, current element belongs to.
+
+// @returns void - This method does not return a value
+  
+    // Example:
+    console.log("");
+    console.log("Using forEach() method:");
+    const numbers3 = [1, 2, 3, 4, 5];
+    numbers3.forEach((num) => {
+        console.log(num); // Output: 1, 2, 3, 4, 5
+    });
+
+    // Example:
+    const fruits3 = ["Apple", "Banana", "Cherry"];
+    fruits3.forEach((fruit, index) => {
+        console.log(`${index}: ${fruit}`); // Output: 0: Apple    1: Banana    2: Cherry
+    }); 
+
+    // Example:
+    const mixedData2: Array<string | number> = ["John", 101, "Smith", 102, "Peter", 103];
+    mixedData2.forEach((item, index, arr) => {
+        console.log(`Index: ${index}, Item: ${item}, Array: ${arr}`); 
+        // Output: Index: 0, Item: John, Array: John,101,Smith,102,Peter,103    
+        // Index: 1, Item: 101, Array: John,101,Smith,102,Peter,103    
+        // Index: 2, Item: Smith, Array: John,101,Smith,102,Peter,103    
+        // Index: 3, Item: 102, Array: John,101,Smith,102,Peter,103    
+        // Index: 4, Item: Peter, Array: John,101,Smith,102,Peter,103    
+        // Index: 5, Item: 103, Array: John,101,Smith,102,Peter,103
+    });
+
+    // Example:
+    fruits3.forEach((fruit, index) => {
+        if (fruit === "Banana") {
+            console.log("Found Banana!"); // Output: Found Banana!
+            return; // This will only exit the current iteration of the forEach loop, not the entire loop
+        }   
+        console.log(fruit); // Output: Apple    Cherry
+        console.log(`${index}: ${fruit}`); // Output: 0: Apple    Found Banana!    2: Cherry
+    });
+
+// 2. map(): method creates a new array populated with the results of calling a provided function on every element in the calling array.
+//      - Returns a new array with the results of calling a provided function on every element in the calling array.
+//      - Does NOT modify the original array
+//      - The callback function receives three parameters: element, index, and array
+
+// Syntax:
+//      let newArray = array.map(function(element, index, array))
+//      - element: The current element being processed in the array
+//      - index (optional): The index of the current element being processed in the array
+//      - array (optional): The array map() was called upon, current element belongs to.
+
+// @returns A new array with each element being the result of the callback function.
+
+    // Example:
+    console.log("");
+    console.log("Using map() method:");
+    const numbers4 = [1, 2, 3, 4, 5];
+    const squareNumbers = numbers4.map(function(num) { return num * num; }); // This will return a new array with the same elements as numbers4 since the callback function does not modify the elements}
+    const squaredNumbers = numbers4.map((num) => num * num);
+    console.log(squareNumbers); // Output: [1, 4, 9, 16, 25]
+    console.log(squaredNumbers); // Output: [1, 4, 9, 16, 25]
+    console.log("original array:", numbers4); // Output: [1, 2, 3, 4, 5] (original array is unchanged)
+
+    // Example:
+    const fruits4 = ["Apple", "Banana", "Cherry"];
+    const upperCaseFruits = fruits4.map((fruit) => fruit.toUpperCase());
+    console.log(upperCaseFruits); // Output: ["APPLE", "BANANA", "CHERRY"]
+    console.log("original array:", fruits4); // Output: ["Apple", "Banana", "Cherry"] (original array is unchanged)
+    
+// 3. filter(): method creates a new array with all elements that pass/satisfy the test implemented by the provided function.
+//      - Returns a new array with all elements that pass the test implemented by the provided function.
+//      - Does NOT modify the original array
+//      - The callback function receives three parameters: element, index, and array
+
+// Syntax:
+//      let newArray = array.filter(function(element, index, array))
+//      - element: The current element being processed in the array
+//      - index (optional): The index of the current element being processed in the array
+//      - array (optional): The array filter() was called upon, current element belongs to.
+
+    // Example:
+    console.log("");
+    console.log("Using filter() method:");
+    const numbers5 = [1, 2, 3, 4, 5];
+    const evenNumbers = numbers5.filter((num) => num % 2 === 0);
+    console.log(evenNumbers); // Output: [2, 4]
+    console.log("original array:", numbers5); // Output: [1, 2, 3, 4, 5] (original array is unchanged)
+
+    // Example:
+    const fruits5 = ["Apple", "Banana", "Cherry", "Mango", "Blueberry", "Strawberry"];
+    const fruitsWithA = fruits5.filter((fruit) => fruit.includes("a") || fruit.includes("A"));
+    console.log(fruitsWithA); // Output: ["Apple", "Banana", "Mango"]
+    console.log("original array:", fruits5); // Output: ["Apple", "Banana", "Cherry", "Mango", "Blueberry", "Strawberry"] 
+
+// 4. reduce(): method executes a reducer function (that you provide) on each element of the array, resulting in a single output value.
+//      - Executes a reducer function on each element of the array, resulting in a single output value.
+//      - Does NOT modify the original array
+//      - The reducer function receives four parameters: accumulator, currentValue, currentIndex, and array
+
+// Syntax:
+//      let result = array.reduce(function(accumulator, currentValue, currentIndex, array), initialValue)
+//      - accumulator: The accumulated value previously returned in the last invocation of the callback, or initialValue, if supplied.
+//      - currentValue: The current element being processed in the array
+//      - currentIndex (optional): The index of the current element being processed in the array
+//      - array (optional): The array reduce() was called upon, current element belongs to.
+// @param initialValue - Optional. A value to use as the first argument to the first call of the callback. 
+// If no initialValue is supplied, the first element in the array will be used as the initial accumulator value and skipped as currentValue.
+
+// @returns The single value that results from the reduction.
+
+    // Example:
+    console.log("");
+    console.log("Using reduce() method:");  
+    const numbers6 = [1, 2, 3, 4, 5];
+    const sum = numbers6.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    console.log(`Sum of numbers: ${sum}`); // Output: 15
+    console.log("original array:", numbers6); // Output: [1, 2, 3, 4, 5] (original array is unchanged)
+
+    // Example:
+    const product = numbers6.reduce((accumulator, currentValue) => accumulator * currentValue, 1);
+    console.log(`Product of numbers: ${product}`); // Output: 120
+    console.log("original array:", numbers6); // Output: [1, 2, 3, 4, 5] (original array is unchanged)
+
+// 5. some(): method tests whether at least one element in the array passes the test implemented by the provided function. It returns a Boolean value.
+//      - Tests whether at least one element in the array passes the test implemented by the provided function. It returns a Boolean value.
+//      - Does NOT modify the original array
+//      - The callback function receives three parameters: element, index, and array
+
+// Syntax:
+//      let result = array.some(function(element, index, array))
+//      - element: The current element being processed in the array
+//      - index (optional): The index of the current element being processed in the array
+//      - array (optional): The array some() was called upon, current element belongs to.
+
+// @returns true if the callback function returns a truthy value for at least one element in the array. Otherwise, false.
+
+    // Example:
+    console.log("");
+    console.log("Using some() method:");
+    const numbers7 = [1, 2, 3, 4, 5];
+    const hasEvenNumber = numbers7.some((num) => num % 2 === 0);
+    console.log(`Does the array have an even number? ${hasEvenNumber}`); // Output: true
+
+    // Example:
+    const hasGreaterThan5 = numbers7.some((num) => num > 5);
+    console.log(`Does the array have a number greater than 5? ${hasGreaterThan5}`); // Output: false
+
+// 6. every(): method tests whether all elements in the array pass the test implemented by the provided function. It returns a Boolean value.
+//      - Tests whether all elements in the array pass the test implemented by the provided function. It returns a Boolean value.
+//      - Does NOT modify the original array
+//      - The callback function receives three parameters: element, index, and array
+
+// Syntax:
+//      let result = array.every(function(element, index, array))
+//      - element: The current element being processed in the array
+//      - index (optional): The index of the current element being processed in the array
+//      - array (optional): The array every() was called upon, current element belongs to.
+
+// @returns true if the callback function returns a truthy value for every array element. Otherwise, false.
+
+    // Example:
+    console.log("");
+    console.log("Using every() method:");
+    const numbers8 = [2, 4, 6, 8, 10];
+    const allEven = numbers8.every((num) => num % 2 === 0);
+    console.log("Are all numbers even?", allEven); // Output: true
+
+    // Example:
+    const allGreaterThan5 = numbers8.every((num) => num > 5);
+    console.log(`Are all numbers greater than 5? ${allGreaterThan5}`); // Output: false
 
 
 

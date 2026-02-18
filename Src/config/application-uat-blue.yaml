@@ -1,0 +1,37 @@
+web:
+  baseUrl: "https://uat-green.example.com" # Base URL for the UAT Green environment
+
+db2:
+  host: "uat-green-db2.example.com" # DB2 database host for UAT Green
+  port: 50000 # DB2 database port
+  database: "uat_green_db" # DB2 database name
+  userEnvVar: "db2_user" # DB2 database username
+  passwordEnvVar: "db2_password" # DB2 database password
+
+mq:
+  queueManager: "UAT_GREEN_QM" # MQ Queue Manager for UAT Green
+  channel: "UAT_GREEN_CHANNEL" # MQ Channel for UAT Green
+  host: "uat-green-mq.example.com" # MQ host for UAT Green
+  port: 1414 # MQ port for UAT Green
+  queues:
+    request: "UAT_GREEN_REQUEST_QUEUE" # MQ request queue for UAT Green
+    response: "UAT_GREEN_RESPONSE_QUEUE" # MQ response queue for UAT Green
+
+api:
+  baseUrl: "https://api.uat-green.example.com" # Base URL for API testing in UAT Green
+  auth:
+    clientIdEnvVar: "api_user" # Environment variable for API username
+    clientSecretEnvVar: "api_password" # Environment variable for API password
+
+jira:
+  baseUrl: "https://jira.uat-green.example.com" # Base URL for JIRA in UAT Green
+  tokenEnvVar: "jira_token" # Environment variable for JIRA API token
+  token: "your-jira-api-token" # JIRA API token for authentication (consider using environment variables for security)
+  project: "UATGREEN" # JIRA project key for UAT Green
+  createTestExecution: false # Flag to indicate whether to create test execution in JIRA
+  jiraStatusUpdateFlag: false # Flag to indicate whether to update JIRA status based on test results
+  testPlanKey: "UATGREEN-123" # JIRA test plan key for UAT Green (if createTestExecution is true)
+  testExecKey: "UATGREEN-456" # JIRA test execution key for UAT Green (if createTestExecution is false)
+
+
+  

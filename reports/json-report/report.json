@@ -1,0 +1,202 @@
+{
+  "config": {
+    "configFile": "E:\\Automation\\Projects\\TypeScript\\playwright.config.ts",
+    "rootDir": "E:/Automation/Projects/TypeScript/src/Playwright",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "E:/Automation/Projects/TypeScript/reports/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Playwright Test Automaion",
+        "name": "Playwright Test Automaion",
+        "testDir": "E:/Automation/Projects/TypeScript/src/Playwright",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "./reports/html-report",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "./reports/json-report/report.json"
+        }
+      ],
+      [
+        "line",
+        null
+      ],
+      [
+        "E:\\Automation\\Projects\\TypeScript\\node_modules\\allure-playwright\\dist\\cjs\\index.js",
+        {
+          "resultsDir": "./reports/allure-results",
+          "detail": true,
+          "suiteTitle": false,
+          "links": {
+            "issue": {
+              "urlTemplate": "https://your-issue-tracker.com/issue/{id}"
+            }
+          },
+          "categories": [
+            {
+              "name": "Failed Tests",
+              "messageRegex": ".*"
+            }
+          ],
+          "environmentInfo": {
+            "NODE_VERSION": "v24.13.1",
+            "OS": "win32",
+            "Environment": "ist-green",
+            "BaseURL": "https://uat-green.example.com"
+          }
+        }
+      ],
+      [
+        "list",
+        null
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "./reports/junit-report/results.xml"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "example.spec.ts",
+      "file": "example.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "has title",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Playwright Test Automaion",
+              "projectName": "Playwright Test Automaion",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1436,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-02-18T22:50:33.403Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "E:\\Automation\\Projects\\TypeScript\\reports\\test-results\\example-has-title-Playwright-Test-Automaion\\test-finished-1.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a30a6eba6312f6b87ea5-3d437f66dca94b9f2bb3",
+          "file": "example.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "get started link",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Playwright Test Automaion",
+              "projectName": "Playwright Test Automaion",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1737,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-02-18T22:50:33.383Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "E:\\Automation\\Projects\\TypeScript\\reports\\test-results\\example-get-started-link-Playwright-Test-Automaion\\test-finished-1.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a30a6eba6312f6b87ea5-fdd1eee424aa8d7a656f",
+          "file": "example.spec.ts",
+          "line": 10,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-02-18T22:50:31.713Z",
+    "duration": 3967.5480000000002,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

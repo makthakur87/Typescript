@@ -11,6 +11,6 @@
     "isolatedModules": true,
     "outDir": "dist"
   },
-  "include": ["src", "src/TypeScriptCode", "src/Day1"],
+  "include": ["src", "src/TypeScriptCode"],
   "exclude": ["node_modules"]
 }

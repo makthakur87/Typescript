@@ -1,16 +1,13 @@
-<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="3.9675480000000003">
-<testsuite name="example.spec.ts" timestamp="2026-02-18T22:50:31.741Z" hostname="Playwright Test Automaion" tests="2" failures="0" skipped="0" time="3.173" errors="0">
-<testcase name="has title" classname="example.spec.ts" time="1.436">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="3.4623389999999996">
+<testsuite name="login.spec.ts" timestamp="2026-02-20T05:41:55.404Z" hostname="Playwright Test Automaion" tests="1" failures="0" skipped="0" time="1.994" errors="0">
+<testcase name="Login successful" classname="login.spec.ts" time="1.994">
 <system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\example-has-title-Playwright-Test-Automaion\test-finished-1.png]]
-]]>
-</system-out>
-</testcase>
-<testcase name="get started link" classname="example.spec.ts" time="1.737">
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\test-results\example-get-started-link-Playwright-Test-Automaion\test-finished-1.png]]
+<![CDATA[>>> Looking for user file: E:\Automation\Projects\TypeScript\src\testdata\ist-green\users.json
+CWD: E:\Automation\Projects\TypeScript
+>>> BASE URL: https://demo.nopcommerce.com/
+Log out
+
+[[ATTACHMENT|..\test-results\login-Login-successful-Playwright-Test-Automaion\test-finished-1.png]]
 ]]>
 </system-out>
 </testcase>

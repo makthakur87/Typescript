@@ -1,10 +1,10 @@
 web:
-  baseUrl: "https://uat-green.example.com" # Base URL for the UAT Green environment
+  baseUrl: "https://ist-blue.example.com" # Base URL for the IST Blue environment
 
 db2:
-  host: "uat-green-db2.example.com" # DB2 database host for UAT Green
+  host: "ist-blue-db2.example.com" # DB2 database host for IST Blue
   port: 50000 # DB2 database port
-  database: "uat_green_db" # DB2 database name
+  database: "ist_blue_db" # DB2 database name
   userEnvVar: "db2_user" # DB2 database username
   passwordEnvVar: "db2_password" # DB2 database password
 

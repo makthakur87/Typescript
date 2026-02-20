@@ -1,0 +1,4 @@
+>>> Looking for user file: E:\Automation\Projects\TypeScript\src\testdata\ist-green\users.json
+CWD: E:\Automation\Projects\TypeScript
+>>> BASE URL: https://demo.nopcommerce.com/
+Log out

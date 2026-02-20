@@ -1,0 +1,15 @@
+{
+  "userList": [
+    {
+      "loginUser":                "Login",
+      "userName":                 "makthakur",
+      "userPassword":             "Mandy",
+      "customerID":               "",
+      "customerUserId":           "",
+      "sendOnlyCustomer":         false,
+      "solePropUser":             true,
+      "enhancedCustomer":         false,
+      "pegaOnboardedCustomer":    false
+    }
+  ]
+}

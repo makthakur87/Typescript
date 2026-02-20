@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import { loadEnvironment } from './src/utils/envLoader';
+import { loadEnvironment } from './src/config/utils/envLoader';
 
 // npm install dotenv --save
 import * as dotenv from 'dotenv';
@@ -7,8 +7,8 @@ import * as dotenv from 'dotenv';
 // Load environment variables from .env file
 dotenv.config();
 
-const envName = process.env.ENV_NAME || 'uat-green'; // Default to 'uat-green' if ENV_NAME is not set, otherwise set $env:ENV_NAME='ist-green'
-// console.log(`Running tests in ${envName} environment`);
+const envName = process.env.ENV_NAME || 'uat-green'; // Default to 'uat-green' if ENV_NAME is not set, otherwise set  $env:ENV="ist-green"
+console.log(`Running tests in ${envName} environment`);
 
 const env = loadEnvironment(envName);
 
@@ -28,7 +28,7 @@ const debugMode = !!process.env.PWDEBUG || !!process.env.DEBUG_PLAYWRIGHT;
 
 export default defineConfig({
   timeout: 1 * 120 * 1000, // 120 seconds 
-  testDir: './src/Playwright', // Specify the test directory.
+  testDir: './src/tests', // Specify the test directory.
   testMatch: '**/*.spec.ts', // Only run test files with .spec.ts extension
   // fullyParallel: true, // Run all tests in parallel.
   fullyParallel: debugMode ? false : true, // Disable parallel execution when debugging to simplify the process, otherwise enable it for faster execution

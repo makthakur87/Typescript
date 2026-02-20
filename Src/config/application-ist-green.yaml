@@ -1,5 +1,5 @@
 web:
-  baseUrl: "https://uat-green.example.com" # Base URL for the UAT Green environment
+  baseUrl: "https://demo.nopcommerce.com/" # Base URL for the UAT Green environment
 
 db2:
   host: "uat-green-db2.example.com" # DB2 database host for UAT Green

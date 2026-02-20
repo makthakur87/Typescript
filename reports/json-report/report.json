@@ -1,7 +1,7 @@
 {
   "config": {
     "configFile": "E:\\Automation\\Projects\\TypeScript\\playwright.config.ts",
-    "rootDir": "E:/Automation/Projects/TypeScript/src/Playwright",
+    "rootDir": "E:/Automation/Projects/TypeScript/src/tests",
     "forbidOnly": false,
     "fullyParallel": true,
     "globalSetup": null,
@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 2
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "projects": [
@@ -20,11 +20,11 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 2
+          "actualWorkers": 1
         },
         "id": "Playwright Test Automaion",
         "name": "Playwright Test Automaion",
-        "testDir": "E:/Automation/Projects/TypeScript/src/Playwright",
+        "testDir": "E:/Automation/Projects/TypeScript/src/tests",
         "testIgnore": [],
         "testMatch": [
           "**/*.spec.ts"
@@ -71,7 +71,7 @@
           "environmentInfo": {
             "NODE_VERSION": "v24.13.1",
             "OS": "win32",
-            "Environment": "ist-green",
+            "Environment": "uat-green",
             "BaseURL": "https://uat-green.example.com"
           }
         }
@@ -102,13 +102,13 @@
   },
   "suites": [
     {
-      "title": "example.spec.ts",
-      "file": "example.spec.ts",
+      "title": "login.spec.ts",
+      "file": "login.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [
         {
-          "title": "has title",
+          "title": "Login successful",
           "ok": true,
           "tags": [],
           "tests": [
@@ -123,18 +123,31 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1436,
+                  "duration": 1994,
                   "errors": [],
-                  "stdout": [],
+                  "stdout": [
+                    {
+                      "text": ">>> Looking for user file: E:\\Automation\\Projects\\TypeScript\\src\\testdata\\ist-green\\users.json\n"
+                    },
+                    {
+                      "text": "CWD: E:\\Automation\\Projects\\TypeScript\n"
+                    },
+                    {
+                      "text": ">>> BASE URL: https://demo.nopcommerce.com/\n"
+                    },
+                    {
+                      "text": "Log out\n"
+                    }
+                  ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-02-18T22:50:33.403Z",
+                  "startTime": "2026-02-20T05:41:56.419Z",
                   "annotations": [],
                   "attachments": [
                     {
                       "name": "screenshot",
                       "contentType": "image/png",
-                      "path": "E:\\Automation\\Projects\\TypeScript\\reports\\test-results\\example-has-title-Playwright-Test-Automaion\\test-finished-1.png"
+                      "path": "E:\\Automation\\Projects\\TypeScript\\reports\\test-results\\login-Login-successful-Playwright-Test-Automaion\\test-finished-1.png"
                     }
                   ]
                 }
@@ -142,49 +155,9 @@
               "status": "expected"
             }
           ],
-          "id": "a30a6eba6312f6b87ea5-3d437f66dca94b9f2bb3",
-          "file": "example.spec.ts",
-          "line": 3,
-          "column": 5
-        },
-        {
-          "title": "get started link",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 120000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "Playwright Test Automaion",
-              "projectName": "Playwright Test Automaion",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 1737,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-02-18T22:50:33.383Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "E:\\Automation\\Projects\\TypeScript\\reports\\test-results\\example-get-started-link-Playwright-Test-Automaion\\test-finished-1.png"
-                    }
-                  ]
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a30a6eba6312f6b87ea5-fdd1eee424aa8d7a656f",
-          "file": "example.spec.ts",
-          "line": 10,
+          "id": "41d3fd2474a19feb00a1-06e3ff8a76deefb48ca3",
+          "file": "login.spec.ts",
+          "line": 6,
           "column": 5
         }
       ]
@@ -192,9 +165,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-02-18T22:50:31.713Z",
-    "duration": 3967.5480000000002,
-    "expected": 2,
+    "startTime": "2026-02-20T05:41:55.371Z",
+    "duration": 3462.3389999999995,
+    "expected": 1,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

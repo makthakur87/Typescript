@@ -1,3 +1,0 @@
-Logo is visible on the page
-Text is visible on the page
-Text 'Welcome to our store' is visible on the page

@@ -1,7 +1,8 @@
-import fs from "fs";
-import path from "path";
+// src/config/utils/userLoader.ts
+import * as fs from "fs";
+import * as path from "path";
 
-interface User {
+export type User = {
   loginUser: string;
   userName: string;
   userPassword: string;
@@ -11,29 +12,46 @@ interface User {
   solePropUser: boolean;
   enhancedCustomer: boolean;
   pegaOnboardedCustomer: boolean;
-}
+};
 
-export function getUser(env: string, loginAlias: string): User {
-  env = env.trim();
-  loginAlias = loginAlias.trim();
+type UsersFile = {
+  userList: User[];
+};
 
-  const file = path.resolve(process.cwd(), `src/testdata/${env}/users.json`);
-  console.log(">>> Looking for user file:", file);
-  console.log("CWD:", process.cwd());
+export function loadUsers(envName: string, loginUser: string): User {
+  // Example path: src/testData/ist-green/users.json
+  const filePath = path.resolve(process.cwd(), "src", "testdata", envName, "users.json");
 
-  if (!fs.existsSync(file)) {
-    throw new Error(`User file not found for environment: ${env}`);
+  if (!fs.existsSync(filePath)) {
+    throw new Error(
+      `Users file not found for environment '${envName}' at path: ${filePath}`
+    );
   }
 
-  const json = JSON.parse(fs.readFileSync(file, "utf-8"));
+  const content = fs.readFileSync(filePath, "utf-8");
+  let parsed: UsersFile;
 
-  const users: User[] = json.userList;
+  try {
+    parsed = JSON.parse(content) as UsersFile;
+  } catch (err) {
+    throw new Error(
+      `Failed to parse users file for environment '${envName}' at path: ${filePath}. Error: ${
+        err instanceof Error ? err.message : String(err)
+      }`
+    );
+  }
 
-  const user = users.find((u: User) => u.loginUser === loginAlias);
+  if (!parsed.userList || !Array.isArray(parsed.userList)) {
+    throw new Error(
+      `Invalid users file structure for environment '${envName}' at path: ${filePath}. Expected 'userList' array.`
+    );
+  }
 
+  const user = parsed.userList.find((u) => u.loginUser === loginUser);
   if (!user) {
-    console.log(">>> Available loginUser values:", users.map(u => u.loginUser));
-    throw new Error(`Login alias '${loginAlias}' not found in ${env}/users.json`);
+    throw new Error(
+      `User with loginUser '${loginUser}' not found in users file for environment '${envName}' at path: ${filePath}`
+    );
   }
 
   return user;

@@ -74,7 +74,7 @@
     let concatenatedString: string = greeting.concat(" ", uname);
     console.log("Concatenated string:", concatenatedString); // Output: Concatenated string: Hello, World! Alice
 
-// 11. slice(): Extracts a section of the string and returns it as a new string
+// 12. slice(): Extracts a section of the string and returns it as a new string
     let slicedGreeting: string = greeting.slice(0, 5); // "Hello, World!" -> "Hello"
     console.log(`Sliced greeting: ${slicedGreeting}`); // Output: Sliced greeting: Hello
 

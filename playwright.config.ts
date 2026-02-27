@@ -28,7 +28,7 @@ const debugMode = !!process.env.PWDEBUG || !!process.env.DEBUG_PLAYWRIGHT;
 
 export default defineConfig({
   timeout: 1 * 120 * 1000, // 120 seconds 
-  testDir: './src/tests', // Specify the test directory.
+  testDir: './src/Playwright', // Specify the test directory.
   testMatch: '**/*.spec.ts', // Only run test files with .spec.ts extension
   // fullyParallel: true, // Run all tests in parallel.
   fullyParallel: debugMode ? false : true, // Disable parallel execution when debugging to simplify the process, otherwise enable it for faster execution
@@ -107,6 +107,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: debugMode ? 'on' : 'on-first-retry', // Always collect trace when debugging to assist with troubleshooting, otherwise only collect trace on the first retry to save resources
+    testIdAttribute: 'data-pw', // Use a custom attribute for test IDs to improve test stability and maintainability
   },
 
   /* Configure projects for major browsers */

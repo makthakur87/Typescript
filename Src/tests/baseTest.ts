@@ -1,48 +1,47 @@
 // src/tests/baseTest.ts
-import { test as base, expect } from "@playwright/test";
+import type { Browser, BrowserContext, Page } from "@playwright/test";
+import { LoginPage } from "../pages/interac/loginPage";
 import { loadEnvironment } from "../config/utils/envLoader";
-import { getUser } from "../config/utils/userLoader";
-import { LoginLocators } from "../pages/interac/locator";
+import { loadUsers } from "../config/utils/userLoader";
 
-const profile = (process.env.ENV || "uat-green").trim();
-const env = loadEnvironment(profile);
+export class BaseTest {
+  private browser!: Browser;
+  private context!: BrowserContext;
+  private page!: Page;
+  private loginPage!: LoginPage;
 
-console.log("PROFILE RAW:", process.env.ENV);
-console.log("PROFILE USED:", profile);
+  async start(browser: Browser) {
+    this.browser = browser;
+    this.context = await this.browser.newContext();
+    this.page = await this.context.newPage();
+    this.loginPage = new LoginPage(this.page);
+  }
 
-const loginAlias = process.env.LOGIN_USER || "rwq"; // $env:LOGIN_USER="abc"
-const user = getUser(profile, loginAlias);
+  async login(envName: string, loginUser: string) {
+    // 1. Load env config
+    const envConfig = loadEnvironment(envName);
+  
+    // 2. Load user credentials
+    // const { userName, userPassword } = loadUsers(envName, loginUser);
+    const user = loadUsers(envName, loginUser);
 
-console.log(">>> Using baseTest from:", __filename);
-console.log(">>> ENV:", profile);
+    // 3. Navigate and login once
+    const url = envConfig.web.baseUrl;
+    console.log(`Navigating to URL: ${url} with user: ${user.userName}`);
+    await this.loginPage.goto(url);
+    // await this.loginPage.login(userName, userPassword);
+    await this.loginPage.login(user.userName, user.userPassword);
+  }
 
-
-export const test = base.extend<{ page: any }>({
-  page: async ({ browser }, use) => {
-    const context = await browser.newContext();
-    const page = await context.newPage();
-
-    const user = getUser(profile, loginAlias);
-    
-
-
-    // === BEFORE ALL LOGIN ===
-    await page.goto(env.web.baseUrl);
-    console.log(">>> BASE URL:", env.web.baseUrl);
-
-    // click on Login button to open the login form
-    await page.click(LoginLocators.loginBtn);
-    await page.fill(LoginLocators.email, user.userName);
-    await page.fill(LoginLocators.password, user.userPassword);
-    await page.click(LoginLocators.loginButton);
-
-    const dashboardText = await page.locator(LoginLocators.dashboardHeader).textContent();
-    console.log(dashboardText);
-    await expect(page.locator(LoginLocators.dashboardHeader)).toBeVisible();
-
-    await use(page);
-
-    await context.close();
-  },
-});
-
+  get pageInstance(): Page {
+    if (!this.page) {
+      throw new Error("Page instance is not initialized. Call start() first.");
+    }
+    return this.page;
+  }
+ 
+  async stop() {
+    await this.page.close();
+    await this.context.close();
+  }
+}

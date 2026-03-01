@@ -1,32 +1,16 @@
 // src/tests/login.spec.ts
-import { test } from "@playwright/test";
-import { BaseTest } from "./baseTest";
+import { test, expect } from "./baseTest";
 import { LoginLocators } from "../pages/interac/locator";
+import { TestDataFileLoader } from "../config/utils/testdataFileLoader";
 
-test.describe("Login Tests", () => {
-  let baseTest: BaseTest;
+test.beforeEach(async ({ page }, testInfo) => {
+  await page.goto("/");
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    const envFromProject = (testInfo.project.metadata as any)?.ENV_NAME;
-    const envName = process.env.ENV_NAME || envFromProject || "uat-green";
+  const testData = TestDataFileLoader.getFilePath("userJsonFile");
+  (testInfo as any).testData = testData;
+});
 
-    const loginUser = process.env.LOGIN_USER || "abc"; // or "admin" if that exists in JSON
-
-    console.log(`Running tests with environment: ${envName}`);
-    console.log(`Running tests with login user: ${loginUser}`);
-
-    baseTest = new BaseTest();
-    await baseTest.start(browser);
-    await baseTest.login(envName, loginUser);
-  });
-
-  test.afterAll(async () => {
-    await baseTest.stop();
-  });
-
-  test("dummy check after login", async () => {
-    const page = baseTest.pageInstance;
-    // Example: assert something visible after login
-    await page.waitForSelector(LoginLocators.dashboardHeader, { timeout: 5000 });
-  });
+test("dummy check after login", async ({ page }) => {
+  // await page.goto("/");
+  await page.waitForSelector(LoginLocators.dashboardHeader, { timeout: 5000 });
 });

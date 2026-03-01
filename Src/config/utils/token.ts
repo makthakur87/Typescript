@@ -1,11 +1,11 @@
-import {TOTP} from 'otplib';
-import authenticator from 'authenticator';
+import {authenticator} from 'otplib';
 
-const totp = new TOTP();
 export async function generateToken(secret: string): Promise<string> {
-  return await totp.generate({secret});
-}
-
-export function generateToken1(secret: string): string {
-  return authenticator.generateToken(secret);
+  const token = authenticator.generate(secret);
+  if (!token) {
+    throw new Error("Failed to generate token");
+  } else {
+    console.log(`Generated token: ${token}`);
+  }
+  return token;
 }

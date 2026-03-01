@@ -1,5 +1,10 @@
 web:
-  baseUrl: "https://uat-green.example.com" # Base URL for the UAT Green environment
+  baseUrl: "https://demowebshop.tricentis.com/" # Base URL for the UAT Green environment
+
+testing:
+  data:
+    userJsonFile: "src/testdata/uat-green/testdata.json" # Path to the JSON file containing test data for UAT Green
+    userJsonFile2: "src/testdata/uat-green/testdata2.json" 
 
 db2:
   host: "uat-green-db2.example.com" # DB2 database host for UAT Green

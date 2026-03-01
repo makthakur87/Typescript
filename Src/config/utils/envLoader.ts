@@ -44,6 +44,10 @@ export interface EnvConfig {
     testcaseKey1?: string;
     fixVersion: string;
   };
+
+  testing: {
+    data: Record<string, string>;
+  };
 }
 
 const cache: Record<string, EnvConfig> = {};
@@ -52,7 +56,7 @@ export function loadEnvironment(profile: string): EnvConfig {
   const trimmedProfile = profile.trim();
   if (cache[trimmedProfile]) return cache[trimmedProfile];
 
-  const configDir = path.resolve(process.cwd(), "src", "config");
+  const configDir = path.resolve(process.cwd(), "src", "config", 'resources');
   const baseFile = path.join(configDir, "application.yaml");
   const profileFile = path.join(configDir, `application-${trimmedProfile}.yaml`);
 

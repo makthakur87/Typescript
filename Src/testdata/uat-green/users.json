@@ -2,8 +2,19 @@
   "userList": [
     {
       "loginUser":                "Login",
-      "userName":                 "makthakur",
-      "userPassword":             "Mandy",
+      "userName":                 "abc@test.com",
+      "userPassword":             "123456",
+      "customerID":               "",
+      "customerUserId":           "",
+      "sendOnlyCustomer":         false,
+      "solePropUser":             true,
+      "enhancedCustomer":         false,
+      "pegaOnboardedCustomer":    false
+    },
+    {
+      "loginUser":                "abc",
+      "userName":                 "abc@test.com",
+      "userPassword":             "123456",
       "customerID":               "",
       "customerUserId":           "",
       "sendOnlyCustomer":         false,

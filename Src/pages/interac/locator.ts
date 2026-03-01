@@ -4,6 +4,8 @@ export const LoginLocators = {
   username: "#Email",
   password: "#Password",
   loginLink: "a.ico-login",
-  loginButton: "form > div.buttons > button",
+  // loginButton: "form > div.buttons > button",
+  loginButton: "input.button-1.login-button",
+  token: "#Token",
   dashboardHeader: "a.ico-logout"
 };

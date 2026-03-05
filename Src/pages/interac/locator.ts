@@ -7,5 +7,9 @@ export const LoginLocators = {
   // loginButton: "form > div.buttons > button",
   loginButton: "input.button-1.login-button",
   token: "#Token",
+  securityQuestion: "#SecurityQuestion",
+  securityAnswer: "#SecurityAnswer",
+  continueButton: "input.button-1.continue-button",
+  retryButton: "input.button-1.retry-button",
   dashboardHeader: "a.ico-logout"
 };

@@ -61,4 +61,8 @@ export class InputBox {
     async isEnabled() : Promise<boolean> {
         return await this.locator.isEnabled(); // Check if the input box is enabled
     }
+
+    async isHidden() : Promise<boolean> {
+        return await this.locator.isHidden(); // Check if the input box is hidden
+    }
 }

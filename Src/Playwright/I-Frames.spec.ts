@@ -37,7 +37,6 @@ test.only("Inner/child Frames Interaction", async ({ page }) => {
     await page.goto("https://ui.vision/demo/webtest/frames/");
     const parentFrame3 = page.frame({ url: "https://ui.vision/demo/webtest/frames/frame_3.html"});
 
-    
     // const frameLocator = parentFrame3?.locator("[name='mytext3']");
 
     if (parentFrame3) {
@@ -53,6 +52,4 @@ test.only("Inner/child Frames Interaction", async ({ page }) => {
     }
 
     await page.waitForTimeout(3000);
-
-    
 });

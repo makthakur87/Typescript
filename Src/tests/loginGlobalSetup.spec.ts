@@ -1,5 +1,5 @@
 // src/tests/login.spec.ts
-import { test, expect } from "./baseTest";
+import { test, expect } from "../fixtures/baseTest";
 import { LoginLocators } from "../pages/interac/locator";
 import { TestDataFileLoader } from "../config/utils/testdataFileLoader";
 

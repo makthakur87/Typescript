@@ -1,8 +1,8 @@
 // src/setup/global-login.setup.ts
 import { chromium } from "@playwright/test";
 import path from "path";
-import { LoginPage } from "../config/utils/loginPage";
-import { ProfilePage } from "../pages/ProfilePage";
+import { LoginPage } from "../config/utils/login/loginPage";
+import { ProfilePage } from "../config/utils/login/profilePage";
 
 async function globalSetup() {
   const browser = await chromium.launch({ channel: "chrome", headless: false });

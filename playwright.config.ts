@@ -12,7 +12,9 @@ console.log(`Running tests in ${envName} environment`);
 const env = loadEnvironment(envName);
 const debugMode = !!process.env.PWDEBUG || !!process.env.DEBUG_PLAYWRIGHT;
 const aliasName = process.env.LOGIN_USER || "abc";
-const lang = process.env.LANG || "en";
+// const lang = process.env.LANG || "en";
+const rawLang = process.env.LANG || "en";
+const lang = rawLang.toLowerCase().startsWith("fr") ? "fr" : "en";
 
 // 🔥 Dynamic storage file name
 const storageFile = `${envName}-${aliasName}-${lang}.json`;

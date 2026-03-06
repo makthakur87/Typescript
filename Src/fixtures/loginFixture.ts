@@ -1,40 +1,82 @@
 // src/fixtures/loginFixture.ts
-import { test as base, Page } from "@playwright/test";
-import { LoginPage } from "../config/utils/loginPage";
 
-type CustomFixtures = {
-  page: Page;           // Logged-in page
-  loginPage: LoginPage; // Helper
-  envName: string;
-  aliasName: string;
+import { test as base, BrowserContext, Page } from "@playwright/test";
+import { LoginPage } from "@config/utils/login/loginPage";
+
+/**
+ * Fixtures available in tests
+ */
+type TestFixtures = {
+  page: Page;
+  loginPage: LoginPage;
 };
 
-export const test = base.extend<CustomFixtures>({
-  envName: async ({}, use, testInfo) => {
+/**
+ * Worker fixtures
+ */
+type WorkerFixtures = {
+  loggedInContext: BrowserContext;
+  envName: string;
+  aliasName: string;
+  lang: 'en' | 'fr';
+};
+
+export const test = base.extend<TestFixtures, WorkerFixtures>({
+
+  // ENV
+  envName: [async ({}, use, testInfo) => {
     const envFromProject = (testInfo.project.metadata as any)?.ENV_NAME;
     const envName = process.env.ENV_NAME || envFromProject || "dev";
     await use(envName);
-  },
+  }, { scope: "worker" }],
 
-  aliasName: async ({}, use) => {
+  // USER
+  aliasName: [async ({}, use) => {
     const aliasName = process.env.LOGIN_USER || "abc";
     await use(aliasName);
+  }, { scope: "worker" }],
+
+  // LANGUAGE
+  lang: [
+    async ({}, use) => {
+      const rawLang = process.env.LANG || "en";
+      // normalize values like EN-US.UTF-8 or fr_CA.UTF-8
+      const normalizedLang = rawLang.toLowerCase().startsWith("fr") ? "fr" : "en";
+      console.log(`Detected language: ${rawLang} → Using: ${normalizedLang}`);
+      await use(normalizedLang as "en" | "fr");
+    },
+    { scope: "worker" }
+  ],
+
+  // LOGIN ONCE PER WORKER
+  loggedInContext: [
+    async ({ browser, envName, aliasName, lang }, use) => {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      const loginPage = new LoginPage(page);
+
+      // ✅ login happens once
+      await loginPage.login(envName, aliasName, lang);
+
+      await page.close();
+      await use(context);
+      await context.close();
+    }, 
+    { scope: "worker" }
+  ],
+
+  // CREATE PAGE FOR EACH TEST
+  page: async ({ loggedInContext }, use) => {
+    const page = await loggedInContext.newPage();
+    await use(page);
+    await page.close();
   },
 
-  loginPage: async ({ page, envName, aliasName }, use) => {
+  loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
-
-    // Login once per test file
-    await test.beforeAll(async () => {
-      await loginPage.login(envName, aliasName);
-    });
-
     await use(loginPage);
-  },
+  }
 
-  page: async ({ page }, use) => {
-    await use(page); // Already logged-in via loginPage
-  },
 });
 
 export const expect = test.expect;

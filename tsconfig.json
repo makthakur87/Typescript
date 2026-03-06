@@ -9,8 +9,18 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "outDir": "dist"
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@pages/*": ["pages/*"],
+      "@config/*": ["config/*"], 
+      "@fixtures/*": ["fixtures/*"],
+      "@utils/*": ["config/utils/*"],
+      "@testdata/*": ["testdata/*"],
+      "@tests/*": ["tests/*"]
+    },
+    "types": ["node", "@playwright/test"]
   },
-  "include": ["src", "src/TypeScriptCode"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", "playwright.config.ts", "src/TypeScriptCode"],
+  "exclude": ["node_modules", "dist", "reports"]
 }

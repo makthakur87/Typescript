@@ -14,11 +14,21 @@ type TestFixtures = {
 /**
  * Worker fixtures
  */
+// type WorkerFixtures = {
+//   loggedInContext: BrowserContext;
+//   envName: string;
+//   aliasName: string;
+//   lang: 'en' | 'en-US' | 'fr';
+// };
+
 type WorkerFixtures = {
-  loggedInContext: BrowserContext;
+  loggedInContext: {
+    context: BrowserContext;
+    persistentLoginPage: Page;
+  };
   envName: string;
   aliasName: string;
-  lang: 'en' | 'fr';
+  lang: 'en' | 'en-US' | 'fr';
 };
 
 export const test = base.extend<TestFixtures, WorkerFixtures>({
@@ -40,10 +50,24 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
   lang: [
     async ({}, use) => {
       const rawLang = process.env.LANG || "en";
-      // normalize values like EN-US.UTF-8 or fr_CA.UTF-8
-      const normalizedLang = rawLang.toLowerCase().startsWith("fr") ? "fr" : "en";
-      console.log(`Detected language: ${rawLang} → Using: ${normalizedLang}`);
-      await use(normalizedLang as "en" | "fr");
+
+      // Normalize environment LANG values
+      let normalizedLang: "en" | "en-US" | "fr";
+
+      const langLower = rawLang.toLowerCase();
+
+      if (langLower.startsWith("fr")) {
+        normalizedLang = "fr";            // fr_CA.UTF-8 → fr
+      } else if (langLower.startsWith("en-us")) {
+        normalizedLang = "en-US";         // en-US.UTF-8 → en-US
+      } else if (langLower.startsWith("en")) {
+        normalizedLang = "en";            // default English
+      } else {
+        throw new Error(`Unsupported language detected: ${rawLang}`);
+      }
+
+      console.log(`Detected LANG: ${rawLang} → Using: ${normalizedLang}`);
+      await use(normalizedLang);
     },
     { scope: "worker" }
   ],
@@ -52,14 +76,18 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
   loggedInContext: [
     async ({ browser, envName, aliasName, lang }, use) => {
       const context = await browser.newContext();
-      const page = await context.newPage();
-      const loginPage = new LoginPage(page);
+      // const page = await context.newPage();
+      // const loginPage = new LoginPage(page);
+      const persistentLoginPage = await context.newPage();
+      const loginPage = new LoginPage(persistentLoginPage);
 
       // ✅ login happens once
+      // await loginPage.login(envName, aliasName, lang);
       await loginPage.login(envName, aliasName, lang);
 
-      await page.close();
-      await use(context);
+      // await page.close();
+      // await use(context);
+      await use({ context, persistentLoginPage });
       await context.close();
     }, 
     { scope: "worker" }
@@ -67,7 +95,8 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
 
   // CREATE PAGE FOR EACH TEST
   page: async ({ loggedInContext }, use) => {
-    const page = await loggedInContext.newPage();
+    // const page = await loggedInContext.newPage();
+    const page = await loggedInContext.context.newPage();
     await use(page);
     await page.close();
   },

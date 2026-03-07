@@ -14,7 +14,12 @@ const debugMode = !!process.env.PWDEBUG || !!process.env.DEBUG_PLAYWRIGHT;
 const aliasName = process.env.LOGIN_USER || "abc";
 // const lang = process.env.LANG || "en";
 const rawLang = process.env.LANG || "en";
-const lang = rawLang.toLowerCase().startsWith("fr") ? "fr" : "en";
+const langLower = rawLang.toLowerCase();
+const lang: "en" | "en-US" | "fr" =
+  langLower.startsWith("fr") ? "fr" :
+  langLower.startsWith("en-us") ? "en-US" :
+  langLower.startsWith("en") ? "en" :
+  (() => { throw new Error(`Unsupported LANG: ${rawLang}`); })();
 
 // 🔥 Dynamic storage file name
 const storageFile = `${envName}-${aliasName}-${lang}.json`;
@@ -134,6 +139,16 @@ export default defineConfig({
          navigationTimeout: debugMode ? 30000: 15000, // 
       },
     },
+    {
+      name: "EN",
+      testDir: "src/tests/en",
+      use: { storageState: "./storage/uat-green-abc-en.json"}
+    },
+    {
+      name: "FR",
+      testDir: "src/tests/fr",
+      use: { storageState: "./storage/uat-green-abc-fr.json" }
+    }
 
     // {
     //   name: 'firefox',

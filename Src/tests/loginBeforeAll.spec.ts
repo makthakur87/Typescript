@@ -4,6 +4,7 @@
 
 // # FR tests
 // ENV_NAME=uat-green LOGIN_USER=abc LANG=fr USE_GLOBAL_LOGIN=true npx playwright test
+import { ProfilePage } from "@config/utils/login/profilePage";
 import { test, expect } from "../fixtures/loginFixture";
 
 test.describe("English tests", () => {
@@ -20,4 +21,23 @@ test.describe("French tests", () => {
   test("Dashboard is visible in FR", async ({ page }) => {
     await expect(page.locator("text=Tableau de bord")).toBeVisible();
   });
+
+  // Runs once after all tests in this file
+ test.afterAll(async ({ loggedInContext }) => {
+  try {
+    // Create a new page from the logged-in context
+    // const page = await loggedInContext.newPage();
+    const { persistentLoginPage } = loggedInContext;
+    // const profilePage = new ProfilePage(page);
+    const profilePage = new ProfilePage(persistentLoginPage);
+
+    await profilePage.navigateToProfile();
+    await profilePage.logout();
+
+    console.log("✅ Logout completed after this test file");
+    await persistentLoginPage.close();
+  } catch (error) {
+    console.log(`⚠️ Logout failed after test file: ${error}`);
+  }
+});
 });

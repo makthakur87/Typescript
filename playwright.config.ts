@@ -103,7 +103,7 @@ export default defineConfig({
       : undefined, // Use the dynamically generated storage state file if global login is enabled, 
       // otherwise do not use any storage state to allow for fresh logins in each test
     headless: !debugMode, // Run in headless mode unless debugging to speed up execution
-    viewport: { width: 1280, height: 720 }, // Set a consistent viewport size for all tests
+    // viewport: { width: 1280, height: 720 }, // Set a consistent viewport size for all tests
     navigationTimeout: 30 * 1000, // Set navigation timeout to 30 seconds to accommodate slower environments
     actionTimeout: 15 * 1000, // Set action timeout to 15 seconds to allow for slower interactions in certain environments
     video: 'off', // Record video for all tests to help with debugging and analysis
@@ -113,9 +113,9 @@ export default defineConfig({
     launchOptions: {
       args:[
         '--start-maximized', // Start the browser maximized to ensure consistent viewport size
-        '--window-size=1280,720', // Set a specific window size to ensure consistent test conditions
-        '--incognito', // Launch the browser in incognito mode to ensure a clean state for each test run
-        '--no-sandbox', // Disable sandboxing for better compatibility in certain environments (use with caution)
+        // '--window-size=1280,720', // Set a specific window size to ensure consistent test conditions
+        // '--incognito', // Launch the browser in incognito mode to ensure a clean state for each test run
+        // '--no-sandbox', // Disable sandboxing for better compatibility in certain environments (use with caution)
       ],
     },
     contextOptions: {

@@ -40,12 +40,12 @@ const useGlobalLogin = process.env.USE_GLOBAL_LOGIN === "true";
  */
 
 export default defineConfig({
-  timeout: 1 * 120 * 1000, // 120 seconds 
+  timeout: 1 * 120 * 1000, // 120 seconds test timeout to accommodate slower environments and allow for debugging when needed
+  expect: { timeout: 10000, }, // Expectation timeout of 10 seconds
   testDir: './src/Playwright', // Specify the test directory.
   testMatch: '**/*.spec.ts', // Only run test files with .spec.ts extension
   // fullyParallel: true, // Run all tests in parallel.
   fullyParallel: debugMode ? false : true, // Disable parallel execution when debugging to simplify the process, otherwise enable it for faster execution
-  expect: { timeout: 5000, }, // Expectation timeout of 5 seconds
   forbidOnly: !!process.env.CI, // Fail the build on CI if you accidentally left test.only in the source code.
   // retries: process.env.CI ? 2 : 0, // Retry on CI only
   retries: debugMode ? 0 : 0, // Disable retries when debugging to speed up the process

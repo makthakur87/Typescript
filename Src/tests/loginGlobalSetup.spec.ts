@@ -1,7 +1,7 @@
 // src/tests/login.spec.ts
-import { test, expect } from "../fixtures/baseTest";
-import { LoginLocators } from "../pages/interac/locator";
-import { TestDataFileLoader } from "../config/utils/testdataFileLoader";
+import { test, expect } from "../../fixtures/baseTest";
+import { LoginLocators } from "../../pages/interac/locator";
+import { TestDataFileLoader } from "../../config/utils/testdataFileLoader";
 
 test.beforeEach(async ({ page }, testInfo) => {
   await page.goto("/");

@@ -5,7 +5,7 @@
 // # FR tests
 // ENV_NAME=uat-green LOGIN_USER=abc LANG=fr USE_GLOBAL_LOGIN=true npx playwright test
 import { ProfilePage } from "@config/utils/login/profilePage";
-import { test, expect } from "../fixtures/loginFixture";
+import { test, expect } from "../../fixtures/loginFixture";
 
 test.describe("English tests", () => {
   test.use({ lang: 'en' }); // all tests in this block use English

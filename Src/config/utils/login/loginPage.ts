@@ -1,5 +1,4 @@
 // src/pages/LoginPage.ts
-
 import { Locator, Page, expect } from "@playwright/test";
 import { loadEnvironment } from "@utils/envLoader";
 import { loadUsers } from "@utils/userLoader";
@@ -46,132 +45,95 @@ export class LoginPage {
   }
 
   // ==============================
-  // MAIN LOGIN METHOD (GENERIC)
+  // MAIN LOGIN METHOD
   // ==============================
-
   async login(envName: string, aliasName: string, lang: "en" | "en-US" | "fr" = "en"): Promise<void> {
-    // if (this.alreadyLoggedIn) {
-    //   console.log("Already logged in, skipping login.");
-    //   return;
-    // }
-
-    const envConfig = loadEnvironment(envName);
     const user = loadUsers(envName, aliasName);
+    const envConfig = loadEnvironment(envName);
     const url = envConfig.web.baseUrl;
 
-    // console.log(`environment configuration is ${JSON.stringify(envConfig)}`);
-    // console.log(`user configuration is ${JSON.stringify(user)}`);
-    console.log(`navigating to ${url}`);
-    console.log(`Logging in: env=${envName}, user=${aliasName}, lang=${lang}`);
+    console.log(`Navigating to ${url} | env=${envName}, user=${aliasName}, lang=${lang}`);
+    
+    try { await this.page.goto(url, { waitUntil: 'domcontentloaded' }); }
+    catch (err) { console.log(`Cannot reach URL ${url}: ${err}`); return; }
 
-     // ===== STEP 1: Pre-login check =====
-    try {
-      await this.page.goto(url, { waitUntil: 'domcontentloaded' });
-      console.log(`URL ${url} reachable. Proceeding with login.`);
-    } catch (error) {
-      console.log(`Application unavailable before login: ${error}`);
-      return; // Skip login
-    }
-
-    // STEP 2: Check if session already active
+    // Already logged in & FR/EN dashboard enforcement
     if (await this.isLoginSuccessful()) {
-      console.log("Session already active");
-      if (lang === "fr" && !(await this.isFrenchDashboard())) {
-        console.log("dashboard page is in EN, switching to FR");
-        await this.switchLanguageAndRelogin(envName, aliasName, lang);
+      const currentLang = await this.getCurrentLanguage();
+      if (currentLang !== lang) {
+        await this.switchLanguage(currentLang);
+        await this.loginIntoUrl(envName, aliasName, lang);
       }
+      console.log(`Already logged in and language correct: ${lang.toUpperCase()}`);
       return;
     }
 
-    // STEP 3: Perform login with retries
+    // Perform login with retries
+    await this.loginIntoUrl(envName, aliasName, lang);
+
+    // Final FR check
+    // 3️⃣ Verify language
+    const targetLanguage = await this.getCurrentLanguage();
+    if (targetLanguage !== lang) {
+      console.log(`Switching language from ${targetLanguage} → ${lang}`);
+      await this.switchLanguage(lang);
+      await this.loginIntoUrl(envName, aliasName, lang);
+    }
+
+    if (!await this.isLoginSuccessful()) {
+      console.log(`Login failed after ${this.MAX_LOGIN_ATTEMPTS} attempts for user ${aliasName} in env ${envName}`);
+      throw new Error(`Login failed for user ${aliasName} in env ${envName}`);
+    }
+    console.log(`Login successful ✅ | Language: ${lang.toUpperCase()}`);
+  }
+
+  // ==============================
+  // Perform Login with retries
+  // ==============================
+  private async loginIntoUrl(envName: string, aliasName: string, lang: "en" | "en-US" | "fr"): Promise<void> {
+    const user = loadUsers(envName, aliasName);
+
     for (let attempt = 1; attempt <= this.MAX_LOGIN_ATTEMPTS; attempt++) {
       console.log(`Login attempt ${attempt}`);
 
       try {
-        // await this.navigateToUrl(url);
         await this.loginToSco(user.userName, user.userPassword);
         await this.waitForPostLogin();
         await this.handleRetryIfPresent();
 
-        const loginSuccess = await this.isLoginSuccessful();
+        if (await this.isLoginSuccessful()) {
+          console.log(`Login successful ✅`);
+          this.alreadyLoggedIn = true;
 
-        if (loginSuccess) {
-          console.log(`Login successful ✅ on attempt ${attempt} with username ${user.userName}, password ${user.userPassword}, env ${envName}`);
-          // ===== STEP 3: Post-login dashboard check =====
           const dashboardAvailable = await this.isPageAvailable(LoginLocators.dashboardHeader, 10000);
           if (!dashboardAvailable) {
-            console.log("Dashboard not available after login. Possibly deployment or server error.");
-            return; // Skip tests
+            console.log("Dashboard not available after login");
+            return;
           }
-          // this.alreadyLoggedIn = true;
-
-          // handle language switch for FR tests
-          if (lang === "fr" && !(await this.isFrenchDashboard())) {
-            console.log("dashboard page is in EN, switching to FR");
-            await this.switchLanguageAndRelogin(envName, aliasName, lang);
-
-            // relogin after language switch
-            // this.alreadyLoggedIn = false;
-            // return await this.login(envName, aliasName, lang);
-          }
-          // Language is English, no further action needed
-          return; // login successful in English, continue
-        } else {
-          console.log(`Login failed ❌ on attempt ${attempt} with username ${user.userName}, password ${user.userPassword}, env ${envName}`);
+          break; // exit retry loop
         }
-      } catch (error) {
-        console.log(`Login error on attempt ${attempt}  : ${error}`);
+      } catch (err) {
+        console.log(`Login error attempt ${attempt}: ${err}`);
         await this.handleRetryIfPresent();
       }
     }
-
-    throw new Error(`Login failed after ${this.MAX_LOGIN_ATTEMPTS} attempts`);
   }
 
-  private async isFrenchDashboard(): Promise<boolean> {
-    const frText = this.page.getByText("Tableau de bord", { exact: false });
-    return await frText.isVisible().catch(() => false);
-  }
+  async switchLanguage(targetLang: "en" | "en-US" | "fr"): Promise<void> {
+    const currentLang = await this.getCurrentLanguage();
+    if (currentLang === targetLang) return;
 
-   // ============================================
-  // LANGUAGE SWITCH (SSO FLOW)
-  // ============================================
-
-  private async switchLanguageAndRelogin(envName: string, aliasName: string, lang: "en" | "en-US" | "fr") {
-    console.log(`Switching language to ${lang}`);
+    console.log(`Switching language from ${currentLang} → ${targetLang}`);
     const profilePage = new ProfilePage(this.page);
     await profilePage.navigateToProfile();
-    await profilePage.changeLanguage(lang);
+    await profilePage.changeLanguage(targetLang);
     await profilePage.logout();
-    console.log("Re-login required after language switch");
-    const envConfig = loadEnvironment(envName);
-    const user = loadUsers(envName, aliasName);
-    await this.page.goto(envConfig.web.baseUrl);
-    await this.loginToSco(user.userName, user.userPassword);
-    await this.waitForPostLogin();
-    await expect(this.dashboardHeader).toBeVisible();
+    console.log(`Language switched ${currentLang} → ${targetLang} | relogin required`);
   }
 
   // ==============================
-  // LANGUAGE SWITCH FOR FR TESTS
+  // Login helpers
   // ==============================
-  async switchLanguage(lang: "en" | "en-US" | "fr"): Promise<void> {
-    const profilePage = new ProfilePage(this.page);
-    await profilePage.navigateToProfile();
-    await profilePage.changeLanguage(lang);
-    await profilePage.logout();
-    console.log(`Language switched to ${lang.toUpperCase()}`);
-  }
-
-  // ==============================
-  // LOGIN METHODS
-  // ==============================
-  private async navigateToUrl(url: string) {
-    await this.page.goto(url);
-    await this.page.setViewportSize({ width: 1280, height: 800 });
-    await expect(this.loginLink.getLocator()).toBeVisible();
-  }
-
   private async loginToSco(username: string, password: string) {
     await this.username.fill(username);
     await this.password.fill(password);
@@ -202,7 +164,6 @@ export class LoginPage {
   }
 
   private generateSecurityAnswer(questionText: string): string {
-    // GENERIC LOGIC - You can externalize this into config if needed
     const cleanText = questionText.replace("?", "").trim();
     const words = cleanText.split(" ");
     const lastWord = words[words.length - 1];
@@ -230,7 +191,6 @@ export class LoginPage {
     }
   }
 
-  // Check if a page element is visible (post-login/dashboard check)
   private async isPageAvailable(selector: string, timeout: number = 10000): Promise<boolean> {
     try {
       await this.page.waitForSelector(selector, { timeout });
@@ -240,4 +200,23 @@ export class LoginPage {
       return false;
     }
   }
+
+  public async getCurrentLanguage(): Promise<"en" | "fr"> {
+    const text = await this.dashboardHeader.innerText();
+    return text.includes("Tableau de bord") ? "fr" : "en";
+  }
+
+  public async getCurrentLanguage1(): Promise<"en" | "fr"> {
+  // Try dashboard text first
+  if (await this.dashboardHeader.isVisible()) {
+    const text = await this.dashboardHeader.innerText();
+    if (text.includes("Tableau de bord")) return "fr";
+  }
+
+  // Fallback: profile page
+  const profilePage = new ProfilePage(this.page);
+  await profilePage.navigateToProfile();
+  const radioValue = await this.page.locator('input[type="radio"]:checked').getAttribute('value');
+  return radioValue === 'F' ? 'fr' : 'en';
+}
 }

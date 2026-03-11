@@ -1,6 +1,5 @@
 // src/fixtures/loginFixture.ts
-
-import { test as base, BrowserContext, Page } from "@playwright/test";
+import { test as base, BrowserContext, Page, expect as baseExpect, TestInfo } from "@playwright/test";
 import { LoginPage } from "@config/utils/login/loginPage";
 
 /**
@@ -14,25 +13,16 @@ type TestFixtures = {
 /**
  * Worker fixtures
  */
-// type WorkerFixtures = {
-//   loggedInContext: BrowserContext;
-//   envName: string;
-//   aliasName: string;
-//   lang: 'en' | 'en-US' | 'fr';
-// };
-
 type WorkerFixtures = {
   loggedInContext: {
     context: BrowserContext;
-    persistentLoginPage: Page;
+    // persistentLoginPage: Page;
   };
   envName: string;
   aliasName: string;
-  lang: 'en' | 'en-US' | 'fr';
 };
 
 export const test = base.extend<TestFixtures, WorkerFixtures>({
-
   // ENV
   envName: [async ({}, use, testInfo) => {
     const envFromProject = (testInfo.project.metadata as any)?.ENV_NAME;
@@ -46,57 +36,36 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
     await use(aliasName);
   }, { scope: "worker" }],
 
-  // LANGUAGE
-  lang: [
-    async ({}, use) => {
-      const rawLang = process.env.LANG || "en";
-
-      // Normalize environment LANG values
-      let normalizedLang: "en" | "en-US" | "fr";
-
-      const langLower = rawLang.toLowerCase();
-
-      if (langLower.startsWith("fr")) {
-        normalizedLang = "fr";            // fr_CA.UTF-8 → fr
-      } else if (langLower.startsWith("en-us")) {
-        normalizedLang = "en-US";         // en-US.UTF-8 → en-US
-      } else if (langLower.startsWith("en")) {
-        normalizedLang = "en";            // default English
-      } else {
-        throw new Error(`Unsupported language detected: ${rawLang}`);
-      }
-
-      console.log(`Detected LANG: ${rawLang} → Using: ${normalizedLang}`);
-      await use(normalizedLang);
+  // LOGIN ONCE PER WORKER
+  loggedInContext: [
+    async ({ browser }, use) => {
+      const context = await browser.newContext();
+      // const persistentLoginPage = await context.newPage();
+      // await use({ context, persistentLoginPage });
+      await use({ context });
+      // Do NOT close context here; page fixture will handle per-test pages
     },
     { scope: "worker" }
   ],
 
-  // LOGIN ONCE PER WORKER
-  loggedInContext: [
-    async ({ browser, envName, aliasName, lang }, use) => {
-      const context = await browser.newContext();
-      // const page = await context.newPage();
-      // const loginPage = new LoginPage(page);
-      const persistentLoginPage = await context.newPage();
-      const loginPage = new LoginPage(persistentLoginPage);
-
-      // ✅ login happens once
-      // await loginPage.login(envName, aliasName, lang);
-      await loginPage.login(envName, aliasName, lang);
-
-      // await page.close();
-      // await use(context);
-      await use({ context, persistentLoginPage });
-      await context.close();
-    }, 
-    { scope: "worker" }
-  ],
-
   // CREATE PAGE FOR EACH TEST
-  page: async ({ loggedInContext }, use) => {
-    // const page = await loggedInContext.newPage();
+  page: async ({ loggedInContext, envName, aliasName }, use, testInfo) => {
     const page = await loggedInContext.context.newPage();
+    const loginPage = new LoginPage(page);
+
+    // --------------------------
+    // Step 1: Determine project language
+    // --------------------------
+    const projectLang = (testInfo.project.metadata as any).LANG as "en" | "fr";
+
+    // --------------------------
+    // Step 2: Login
+    // --------------------------
+    await loginPage.login(envName, aliasName, projectLang);
+
+    // --------------------------
+    // Step 3: Provide page to test
+    // --------------------------
     await use(page);
     await page.close();
   },
@@ -104,8 +73,7 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);
-  }
-
+  },
 });
 
-export const expect = test.expect;
+export const expect = baseExpect;

@@ -42,6 +42,7 @@ test("verify CSS Locators", async ({page}) => {
     await page.waitForTimeout(5000);
 
     // tag[attribute=value]
+    
     // await page.locator("input[name='q']").fill("Gift Cards");
     await page.locator("[name='q']").fill("Gift Cards");
 

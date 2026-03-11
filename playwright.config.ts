@@ -11,7 +11,7 @@ const envName = process.env.ENV_NAME || 'uat-green'; // Default to 'uat-green' i
 console.log(`Running tests in ${envName} environment`);
 const env = loadEnvironment(envName);
 const debugMode = !!process.env.PWDEBUG || !!process.env.DEBUG_PLAYWRIGHT;
-const aliasName = process.env.LOGIN_USER || "abc";
+const aliasName = process.env.LOGIN_USER || "Interac_1";
 // const lang = process.env.LANG || "en";
 const rawLang = process.env.LANG || "en";
 const langLower = rawLang.toLowerCase();
@@ -21,11 +21,11 @@ const lang: "en" | "en-US" | "fr" =
   langLower.startsWith("en") ? "en" :
   (() => { throw new Error(`Unsupported LANG: ${rawLang}`); })();
 
-// 🔥 Dynamic storage file name
-const storageFile = `${envName}-${aliasName}-${lang}.json`;
-
 // Use global setup only if team sets this
 const useGlobalLogin = process.env.USE_GLOBAL_LOGIN === "true";
+
+// 🔥 Dynamic storage file name
+const getStorageFile = (env: string, alias: string, lang: string) => `./storage/${env}-${alias}-${lang}.json`;
 
 /**
  * Read environment variables from file.
@@ -40,7 +40,7 @@ const useGlobalLogin = process.env.USE_GLOBAL_LOGIN === "true";
  */
 
 export default defineConfig({
-  timeout: 1 * 120 * 1000, // 120 seconds test timeout to accommodate slower environments and allow for debugging when needed
+  timeout: 120 * 1000, // 120 seconds test timeout to accommodate slower environments and allow for debugging when needed
   expect: { timeout: 10000, }, // Expectation timeout of 10 seconds
   testDir: './src/Playwright', // Specify the test directory.
   testMatch: '**/*.spec.ts', // Only run test files with .spec.ts extension
@@ -48,7 +48,7 @@ export default defineConfig({
   fullyParallel: debugMode ? false : true, // Disable parallel execution when debugging to simplify the process, otherwise enable it for faster execution
   forbidOnly: !!process.env.CI, // Fail the build on CI if you accidentally left test.only in the source code.
   // retries: process.env.CI ? 2 : 0, // Retry on CI only
-  retries: debugMode ? 0 : 0, // Disable retries when debugging to speed up the process
+  retries: debugMode ? 0 : 0, // disable retries when debugging to simplify the process, otherwise set it to 2 for better stability in CI environments while still providing fast feedback during local development
   // workers: process.env.CI ? 1 : undefined, // Opt out of parallel tests on CI.
   workers: debugMode ? 1 : 2, // Use a single worker when debugging to simplify the process, otherwise use 2 workers for faster execution
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -98,21 +98,21 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: env.web.baseUrl, // Set the base URL for all tests to simplify navigation and ensure consistency across test cases
-    storageState: useGlobalLogin
-      ? `./storage/${envName}-${aliasName}-${lang}.json`
-      : undefined, // Use the dynamically generated storage state file if global login is enabled, 
+    // storageState: useGlobalLogin
+    //   ? getStorageFile(env.name, aliasName, lang) // Use a dynamically generated storage state file based on environment, user alias, and language when global login is enabled
+    //   : undefined, // Use the dynamically generated storage state file if global login is enabled, 
       // otherwise do not use any storage state to allow for fresh logins in each test
     headless: !debugMode, // Run in headless mode unless debugging to speed up execution
     // viewport: { width: 1280, height: 720 }, // Set a consistent viewport size for all tests
     navigationTimeout: 30 * 1000, // Set navigation timeout to 30 seconds to accommodate slower environments
     actionTimeout: 15 * 1000, // Set action timeout to 15 seconds to allow for slower interactions in certain environments
-    video: 'off', // Record video for all tests to help with debugging and analysis
-    screenshot: 'on', // Capture screenshots on test failure to assist with debugging
+    video: 'off', // Record videos only when debugging to save resources, otherwise disable video recording for faster execution and to save disk space
+    screenshot: 'on', // Capture screenshots for all tests to assist with debugging and reporting, especially when tests fail, to provide visual evidence of the application state at the time of failure
     ignoreHTTPSErrors: true, // Ignore HTTPS errors to prevent test failures due to certificate issues
     permissions: ['geolocation'], // Grant geolocation permissions for tests that require location access
     launchOptions: {
       args:[
-        '--start-maximized', // Start the browser maximized to ensure consistent viewport size
+        '--start-maximized', // Start the browser maximized to ensure all elements are visible and to provide a consistent testing environment across different machines and screen sizes
         // '--window-size=1280,720', // Set a specific window size to ensure consistent test conditions
         // '--incognito', // Launch the browser in incognito mode to ensure a clean state for each test run
         // '--no-sandbox', // Disable sandboxing for better compatibility in certain environments (use with caution)
@@ -125,29 +125,39 @@ export default defineConfig({
     },
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: debugMode ? 'on' : 'on-first-retry', // Always collect trace when debugging to assist with troubleshooting, otherwise only collect trace on the first retry to save resources
+    trace: debugMode ? 'on' : 'off', // Enable tracing for all tests when debugging to assist with diagnosing issues, otherwise only enable it on the first retry of a failed test to save resources while still providing valuable information for debugging failures
     testIdAttribute: 'data-pw', // Use a custom attribute for test IDs to improve test stability and maintainability
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "EN",
+      testDir: "src/tests/en",
+       metadata: { LANG: "en" },
+      use: {
+        storageState: useGlobalLogin
+          ? getStorageFile(envName, aliasName, "en")
+          : undefined
+      }
+    },
+    {
+      name: "FR",
+      testDir: "src/tests/fr",
+      metadata: { LANG: "fr" }, // Add language metadata to the project configuration for better reporting and debugging
+      use: {
+        storageState: useGlobalLogin
+          ? getStorageFile(envName, aliasName, "fr")
+          : undefined
+      }
+    },
+    {
       name: "Playwright Test Automaion",
       use: {
          ...devices['Desktop Chrome'],
          channel: 'chrome', // Use the latest Chrome browser for testing to ensure compatibility with modern web features and better performance
          navigationTimeout: debugMode ? 30000: 15000, // 
-      },
-    },
-    {
-      name: "EN",
-      testDir: "src/tests/en",
-      use: { storageState: "./storage/uat-green-abc-en.json"}
-    },
-    {
-      name: "FR",
-      testDir: "src/tests/fr",
-      use: { storageState: "./storage/uat-green-abc-fr.json" }
+      }
     }
 
     // {

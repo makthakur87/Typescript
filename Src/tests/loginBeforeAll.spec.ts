@@ -4,40 +4,40 @@
 
 // # FR tests
 // ENV_NAME=uat-green LOGIN_USER=abc LANG=fr USE_GLOBAL_LOGIN=true npx playwright test
-import { ProfilePage } from "@config/utils/login/profilePage";
-import { test, expect } from "../../fixtures/loginFixture";
+import { test, expect } from "../fixtures/loginFixture";
 
-test.describe("English tests", () => {
-  test.use({ lang: 'en' }); // all tests in this block use English
-
-  test("Dashboard is visible in EN", async ({ page }) => {
+test.describe("Login", () => {
+  test("Dashboard is visible", async ({ page }) => {
     await expect(page.locator("text=Dashboard")).toBeVisible();
   });
-});
 
-test.describe("French tests", () => {
-  test.use({ lang: 'fr' }); // all tests in this block use French
+  test("multi-user payment workflow", async ({ multiUserManager }) => {
+    const user1 = "user1"; // alias from userLoader.json
+    const user2 = "user2"; // alias from userLoader.json
 
-  test("Dashboard is visible in FR", async ({ page }) => {
-    await expect(page.locator("text=Tableau de bord")).toBeVisible();
+    // ------------------------
+    // Step 1: User1 login, create recipient & payment
+    // ------------------------
+    await multiUserManager.loginAs(user1, "en");
+    console.log(`Current user: ${multiUserManager.getCurrentUser()} | lang: ${multiUserManager.getCurrentLanguage()}`);
+    // create recipient and payment (pseudo-code)
+    // await createRecipient();
+    // await createPayment();
+
+    // ------------------------
+    // Step 2: Switch to User2 to approve payment
+    // ------------------------
+    await multiUserManager.loginAs(user2, "fr"); // can switch language on login
+    console.log(`Current user: ${multiUserManager.getCurrentUser()} | lang: ${multiUserManager.getCurrentLanguage()}`);
+    // approve payment
+    // await approvePayment();
+
+    // ------------------------
+    // Step 3: Back to User1 to submit payment
+    // ------------------------
+    await multiUserManager.loginAs(user1); // language defaults to last saved in LoginPage
+    console.log(`Current user: ${multiUserManager.getCurrentUser()} | lang: ${multiUserManager.getCurrentLanguage()}`);
+    // submit payment
+    // await submitPayment();
   });
-
-  // Runs once after all tests in this file
- test.afterAll(async ({ loggedInContext }) => {
-  try {
-    // Create a new page from the logged-in context
-    // const page = await loggedInContext.newPage();
-    const { persistentLoginPage } = loggedInContext;
-    // const profilePage = new ProfilePage(page);
-    const profilePage = new ProfilePage(persistentLoginPage);
-
-    await profilePage.navigateToProfile();
-    await profilePage.logout();
-
-    console.log("✅ Logout completed after this test file");
-    await persistentLoginPage.close();
-  } catch (error) {
-    console.log(`⚠️ Logout failed after test file: ${error}`);
-  }
-});
 });

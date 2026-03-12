@@ -51,8 +51,10 @@ export default defineConfig({
   retries: debugMode ? 0 : 0, // disable retries when debugging to simplify the process, otherwise set it to 2 for better stability in CI environments while still providing fast feedback during local development
   // workers: process.env.CI ? 1 : undefined, // Opt out of parallel tests on CI.
   workers: debugMode ? 1 : 2, // Use a single worker when debugging to simplify the process, otherwise use 2 workers for faster execution
+  // grep: process.env.GREP ? new RegExp(process.env.GREP) : undefined, // Use GREP environment variable to filter tests by name or tag when needed, otherwise run all tests
+  // grepInvert: process.env.GREP_INVERT ? new RegExp(process.env.GREP_INVERT) : undefined, // Use GREP_INVERT environment variable to exclude tests by name or tag when needed, otherwise do not exclude any tests
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  // minimize duplicate test results in the HTML report when running in parallel
+  // minimize duplicate test results in the HTML report when running in parallel by using a simple reporter for the console output, and generating detailed reports (HTML, Allure, JUnit) for CI and debugging purposes
   reporter: [
     ['html', { // Specify the output folder for the HTML report
       outputFolder: './reports/html-report', 
@@ -133,7 +135,7 @@ export default defineConfig({
   projects: [
     {
       name: "EN",
-      testDir: "src/tests/en",
+      testDir: "src/tests",
        metadata: { LANG: "en" },
       use: {
         storageState: useGlobalLogin
@@ -143,7 +145,7 @@ export default defineConfig({
     },
     {
       name: "FR",
-      testDir: "src/tests/fr",
+      testDir: "src/tests",
       metadata: { LANG: "fr" }, // Add language metadata to the project configuration for better reporting and debugging
       use: {
         storageState: useGlobalLogin

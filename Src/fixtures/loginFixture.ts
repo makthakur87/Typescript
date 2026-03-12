@@ -1,6 +1,7 @@
 // src/fixtures/loginFixture.ts
 import { test as base, BrowserContext, Page, expect as baseExpect, TestInfo } from "@playwright/test";
 import { LoginPage } from "@config/utils/login/loginPage";
+import { MultiUserManager } from "./multiUserManager";
 
 /**
  * Fixtures available in tests
@@ -8,6 +9,7 @@ import { LoginPage } from "@config/utils/login/loginPage";
 type TestFixtures = {
   page: Page;
   loginPage: LoginPage;
+  multiUserManager: MultiUserManager;
 };
 
 /**
@@ -73,6 +75,11 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);
+  },
+
+  multiUserManager: async ({ page, envName }, use) => {
+    const multiUserManager = new MultiUserManager(page, envName);
+    await use(multiUserManager);
   },
 });
 

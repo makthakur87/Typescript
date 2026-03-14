@@ -1,0 +1,23 @@
+import fs  from "fs";
+
+export class ReadTestDataFile { 
+    static readTestDataFromJsonFile(jsonFilePath: string, targetTestcase: string): any {
+        if(!fs.existsSync(jsonFilePath)) {
+            throw new Error(`Testdata JSON file not found: ${jsonFilePath}`);
+        }
+
+        const fileContent = fs.readFileSync(jsonFilePath, "utf-8");
+        const root = JSON.parse(fileContent);
+        const testcases = root.testcases;
+
+        if (!Array.isArray(testcases)) {
+            throw new Error(`Invalid testdata format: 'testcases' should be an array in ${jsonFilePath}`);
+        }
+
+        const testcaseData = testcases.find((tc: any) => tc.testcase_id.toLowerCase() === targetTestcase.toLowerCase());
+        if (!testcaseData) {
+            throw new Error(`Testcase not found: ${targetTestcase} in ${jsonFilePath}`);
+        }
+        return testcaseData;
+    }
+}

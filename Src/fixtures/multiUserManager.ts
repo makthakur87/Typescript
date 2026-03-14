@@ -44,7 +44,7 @@ export class MultiUserManager {
     await this.loginPage.login(this.envName, aliasName, lang || undefined);
   }
 
-   public async logout() {
+  public async logout() {
     if (!this.loginPage.getCurrentUser()) return;
     await this.profilePage.logout();
   }

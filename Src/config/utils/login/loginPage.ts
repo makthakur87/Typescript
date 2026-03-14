@@ -64,7 +64,7 @@ export class LoginPage {
     if (await this.isLoginSuccessful()) {
       const currentLang = await this.getCurrentPageLanguage();
       if (currentLang !== targetLanguage) {
-        await this.switchLanguage(currentLang);
+        await this.switchLanguage(targetLanguage);
         await this.loginIntoUrl(envName, aliasName);
       }
       console.log(`Already logged in and language correct: ${targetLanguage.toUpperCase()}`);

@@ -38,5 +38,9 @@ jira:
   testPlanKey: "UATGREEN-123" # JIRA test plan key for UAT Green (if createTestExecution is true)
   testExecKey: "UATGREEN-456" # JIRA test execution key for UAT Green (if createTestExecution is false)
 
+testDataFiles:
+  - "src/testdata/uat-green/testdata.json" # List of test data files for UAT Green
+  - "src/testdata/uat-green/existingRecipient.json"
+
 
   

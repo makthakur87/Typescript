@@ -105,13 +105,13 @@ export default defineConfig({
     //   : undefined, // Use the dynamically generated storage state file if global login is enabled, 
       // otherwise do not use any storage state to allow for fresh logins in each test
     headless: !debugMode, // Run in headless mode unless debugging to speed up execution
-    // viewport: { width: 1280, height: 720 }, // Set a consistent viewport size for all tests
     navigationTimeout: 30 * 1000, // Set navigation timeout to 30 seconds to accommodate slower environments
     actionTimeout: 15 * 1000, // Set action timeout to 15 seconds to allow for slower interactions in certain environments
     video: 'off', // Record videos only when debugging to save resources, otherwise disable video recording for faster execution and to save disk space
     screenshot: 'on', // Capture screenshots for all tests to assist with debugging and reporting, especially when tests fail, to provide visual evidence of the application state at the time of failure
     ignoreHTTPSErrors: true, // Ignore HTTPS errors to prevent test failures due to certificate issues
     permissions: ['geolocation'], // Grant geolocation permissions for tests that require location access
+    viewport: null,// { width: 1280, height: 720 }, // Set a consistent viewport size for all tests
     launchOptions: {
       args:[
         '--start-maximized', // Start the browser maximized to ensure all elements are visible and to provide a consistent testing environment across different machines and screen sizes

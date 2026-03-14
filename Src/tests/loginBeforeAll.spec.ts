@@ -40,4 +40,8 @@ test.describe("Login", () => {
     // submit payment
     // await submitPayment();
   });
+
+  test.afterAll(async ({ multiUserManager }) => {
+    await multiUserManager.logout();
+  });
 });

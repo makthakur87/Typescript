@@ -1,6 +1,10 @@
 web:
   baseUrl: "https://ist-blue.example.com" # Base URL for the IST Blue environment
 
+testDataFiles:
+  interacTestDataFile: "src/testdata/${envVar}/interacTestData.json" # Path to the JSON file containing test data for IST Blue
+  interacExistingRecipientTestDataFile: "src/testdata/${envVar}/interacExistingRecipientTestData.json" # Path to the JSON file containing test data for existing recipients in IST Blue
+
 db2:
   host: "ist-blue-db2.example.com" # DB2 database host for IST Blue
   port: 50000 # DB2 database port

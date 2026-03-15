@@ -45,7 +45,7 @@ export default defineConfig({
   testDir: './src/Playwright', // Specify the test directory.
   testMatch: '**/*.spec.ts', // Only run test files with .spec.ts extension
   // fullyParallel: true, // Run all tests in parallel.
-  fullyParallel: debugMode ? false : true, // Disable parallel execution when debugging to simplify the process, otherwise enable it for faster execution
+  fullyParallel: debugMode ? false : false, // Disable parallel execution when debugging to simplify the process, otherwise enable it for faster execution
   forbidOnly: !!process.env.CI, // Fail the build on CI if you accidentally left test.only in the source code.
   // retries: process.env.CI ? 2 : 0, // Retry on CI only
   retries: debugMode ? 0 : 0, // disable retries when debugging to simplify the process, otherwise set it to 2 for better stability in CI environments while still providing fast feedback during local development
@@ -56,6 +56,9 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   // minimize duplicate test results in the HTML report when running in parallel by using a simple reporter for the console output, and generating detailed reports (HTML, Allure, JUnit) for CI and debugging purposes
   reporter: [
+    ["line"], // simple console output without colors or icons, to minimize duplicate test results in the console when running in parallel
+    ['list'], // simple list reporter to minimize duplicate test results in the console when running in parallel
+    ['junit', { outputFile: './reports/junit-report/results.xml' }], // Generate JUnit XML report for CI integration
     ['html', { // Specify the output folder for the HTML report
       outputFolder: './reports/html-report', 
       open: 'never' // change to "always" to auto open, or "on-failure" to open only when tests fail
@@ -63,8 +66,13 @@ export default defineConfig({
     ["json", { // Specify the output file for the JSON report
       outputFile: './reports/json-report/report.json'
     }],
-    ["line"], // simple console output without colors or icons, to minimize duplicate test results in the console when running in parallel
+    // https://github.com/allure-framework/allure-js/blob/main/packages/allure-playwright/README.md 
     // npm install -D allure-playwright
+    // npm install -g allure-commandline // Install Allure commandline globally to generate and open reports using npx allure generate and npx allure open commands, or use it as a dev dependency and run it with npx to avoid global installations
+    
+    // Generate Allure report for better visualization of test results, including screenshots and logs, with detailed configuration to include environment information and categorize failed tests
+    // allure gernerate command: npx allure generate ./reports/allure-results --clean -o ./reports/allure-report
+    // open the generated report: npx allure open ./reports/allure-report
     ["allure-playwright", {
       resultsDir: './reports/allure-results', // Specify the output directory for Allure results
       detail: true, // Include detailed information in the Allure report
@@ -85,8 +93,7 @@ export default defineConfig({
         BaseURL: env.web.baseUrl,
       }
     }], // Generate Allure report for better visualization of test results, including screenshots and logs
-    ['list'], // simple list reporter to minimize duplicate test results in the console when running in parallel
-    ['junit', { outputFile: './reports/junit-report/results.xml' }] // Generate JUnit XML report for CI integration
+    ["./src/config/common/customReporter.ts"]
   ],
 
   // connect MQ and DB2 once before all tests; close the connections after all tests are done

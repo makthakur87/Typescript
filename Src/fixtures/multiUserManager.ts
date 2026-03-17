@@ -5,16 +5,16 @@ import { loadUsers, User } from "@config/utils/userLoader";
 import { ProfilePage } from "@config/utils/login/profilePage";
 
 export class MultiUserManager {
-  private page: Page;
+  private persistentLoginPage: Page;
   private loginPage: LoginPage;
   private envName: string;
   private profilePage: ProfilePage;
 
-  constructor(page: Page, envName: string) {
-    this.page = page;
-    this.loginPage = new LoginPage(page);
+  constructor(loginPage: LoginPage, persistentLoginPage: Page, envName: string, profilePage: ProfilePage) {
+    this.persistentLoginPage = persistentLoginPage;
+    this.loginPage = loginPage;
     this.envName = envName;
-    this.profilePage = new ProfilePage(page);
+    this.profilePage = profilePage;
   }
 
   private getUser(aliasName: string): User {

@@ -3,8 +3,14 @@ web:
 
 testing:
   data:
-    userJsonFile: "src/testdata/uat-green/testdata.json" # Path to the JSON file containing test data for UAT Green
-    userJsonFile2: "src/testdata/uat-green/testdata2.json" 
+    interac: 
+      userJsonFile: "src/testdata/${env}/testdata.json" # Path to the JSON file containing test data for UAT Green
+      userJsonFile2: "src/testdata/${env}/testdata2.json" 
+
+  propertyFiles:
+    interac: 
+      userJsonFile: "src/testdata/propertyFiles/interac-createPayment-${language}-reference.properties" # Path to the JSON file containing test data for UAT Green
+      userJsonFile2: "src/testdata/propertyFiles/interac-createPayment-${language}-reference2.properties"
 
 db2:
   host: "uat-green-db2.example.com" # DB2 database host for UAT Green

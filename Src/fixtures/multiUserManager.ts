@@ -1,7 +1,7 @@
 // src/fixtures/multiUserManager.ts
 import { Page } from "@playwright/test";
 import { LoginPage } from "@config/utils/login/loginPage";
-import { loadUsers, User } from "@config/utils/userLoader";
+import { loadUsers, User } from "@config/loaders/userLoader";
 import { ProfilePage } from "@config/utils/login/profilePage";
 
 export class MultiUserManager {
@@ -45,7 +45,11 @@ export class MultiUserManager {
   }
 
   public async logout() {
-    if (!this.loginPage.getCurrentUser()) return;
+    const myProfileIcon = await this.profilePage.isProfileIconVisible().catch(() => false);
+    if (!myProfileIcon) {
+      console.log("No user is currently logged in.");
+      return;
+    }
     await this.profilePage.logout();
   }
 
@@ -55,5 +59,17 @@ export class MultiUserManager {
 
   public getCurrentLanguage() {
     return this.loginPage.getCurrentLanguage();
+  }
+
+  public getCurrentEnvName(): string {
+    return this.envName;
+  }
+
+  public getContext() {
+    return {
+      envName: this.getCurrentEnvName(),
+      currentUser: this.getCurrentUser(),
+      currentLanguage: this.getCurrentLanguage(),
+    };
   }
 }

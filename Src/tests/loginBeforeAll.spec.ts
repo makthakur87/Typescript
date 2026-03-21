@@ -4,7 +4,10 @@
 
 // # FR tests
 // ENV_NAME=uat-green LOGIN_USER=abc LANG=fr USE_GLOBAL_LOGIN=true npx playwright test
+import { interac_Create_Approve_Submit_Payment } from "teststeps/Interac/CreatePayment/CreatePayment";
 import { test, expect } from "../fixtures/loginFixture";
+
+test.use({ testDataFileKeys: ["interacTestDataFile"], propertyFileKeys: ["interacUserJsonFile"], recipientFileKeys: ["existingRecipientFile"] });
 
 test.describe("Login", () => {
   test("Dashboard is visible", async ({ page }) => {
@@ -39,9 +42,13 @@ test.describe("Login", () => {
     console.log(`Current user: ${multiUserManager.getCurrentUser()} | lang: ${multiUserManager.getCurrentLanguage()}`);
     // submit payment
     // await submitPayment();
+
+     const profileName = interac_Create_Approve_Submit_Payment(multiUserManager);
   });
 
   test.afterAll(async ({ multiUserManager }) => {
     await multiUserManager.logout();
+
+   
   });
 });

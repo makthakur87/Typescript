@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { HomePage } from '@pages/Playwright/HomePage';
-import { CartPage } from '@pages/Playwright/CartPage';
-import { LoginPage } from '@pages/Playwright/LoginPage';
+import { HomePage } from '@pages/pageActions/Playwright/HomePage';
+import { CartPage } from '@pages/pageActions/Playwright/CartPage';
+import { LoginPage } from '@pages/pageActions/Playwright/LoginPage';
 
 test.describe('Demoblaze E2E Tests', () => {
     test('should add a product to the cart and verify it is in the cart', async ({ page }) => {

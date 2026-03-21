@@ -1,9 +1,9 @@
 // src/pages/LoginPage.ts
 import { Locator, Page, expect } from "@playwright/test";
-import { loadEnvironment } from "@utils/envLoader";
-import { loadUsers } from "@utils/userLoader";
+import { loadEnvironment } from "@config/loaders/envLoader";
+import { loadUsers } from "@config/loaders/userLoader";
 import { InputBox } from "@utils/InputBox";
-import { LoginLocators } from "@pages/interac/locator";
+import { LoginLocators } from "@pages/pageFactory/Login/loginLocator";
 import { generateToken } from "authenticator";
 import { authConfig } from "@utils/auth.config";
 import { ProfilePage } from "@config/utils/login/profilePage";

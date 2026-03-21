@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import { loadEnvironment } from './src/config/utils/envLoader';
+import { loadEnvironment } from './src/config/loaders/envLoader';
 
 // npm install dotenv --save
 import * as dotenv from 'dotenv';
@@ -143,7 +143,9 @@ export default defineConfig({
     {
       name: "EN",
       testDir: "src/tests",
-       metadata: { LANG: "en" },
+       metadata: { LANG: "en",
+        LOGIN_USER: "user1",
+        },
       use: {
         storageState: useGlobalLogin
           ? getStorageFile(envName, aliasName, "en")

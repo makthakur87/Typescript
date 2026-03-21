@@ -10,9 +10,5 @@ test.describe('Debugging Tests', () => {
     const title = await page.title();
     expect(title).toBe('Example Domain');
 
-    // http://localhost/opencart/
-    // http://localhost/opencart/admin
-    // https://naveenautomationlabs.com/opencart/
-    // https://tutorialsninja.com/demo/
   });
 });

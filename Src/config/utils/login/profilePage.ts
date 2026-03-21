@@ -14,6 +14,10 @@ export class ProfilePage {
         this.loginPage = new LoginPage(page);
     }   
 
+    async isProfileIconVisible() {
+        return await this.page.locator("css=selector-for-profile-icon").isVisible();
+    }
+    
     async navigateToProfile() {
         await this.page.locator("text=Profile").click();
     }

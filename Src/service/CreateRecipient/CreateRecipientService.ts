@@ -1,104 +1,41 @@
-import fs from "fs";
-import { expect } from "@playwright/test";
-import { RecipientStore } from "../config/utils/recipient";
-import { PaymentConstants } from "@config/common/paymentConstant";
+import { RecipientUtil } from "@config/utils/recipientUtil";
+import { EnvLoader } from "@config/loaders/envLoader";
 
 export class RecipientService {
+  /**
+   * Create or fetch recipient for a testcase
+   * Fully generic: only inputDataMap is required
+   */
+  public static createOrFetchRecipient(inputDataMap: Record<string, any>): Record<string, any> {
+    const testcaseId = inputDataMap.testcaseName || inputDataMap.testcase_id;
+    if (!testcaseId) throw new Error("testcaseName or testcase_id is required in inputDataMap");
 
-  // Memory map (similar to ThreadLocal map in Java)
-  private static recipientMap: Map<string, string> = new Map();
+    const recipientFileKey = inputDataMap.recipientFileKey || "interacRecipientProfile"; // default module key
+    const envName = inputDataMap.envName || process.env.ENV_NAME;
 
-  static createOrFetchRecipient(
-    inputDataMap: Record<string, any>,
-    testName: string,
-    jsonFilePath: string
-  ) {
+    // 1️⃣ Check if profile already exists
+    let profileName = RecipientUtil.readRecipientName(testcaseId, recipientFileKey, envName);
 
-    // 1️⃣ Create unique key for recipient
-    const uniqueRecipientKey =
-      this.createUniqueRecipientString(inputDataMap);
-
-    // 2️⃣ Check JSON file
-    const existingRecipient =
-      this.getRecipientFromJson(testName, jsonFilePath);
-
-    // -----------------------------------
-    // CASE 1: Recipient already in JSON
-    // -----------------------------------
-    if (existingRecipient) {
-
-      console.log("Recipient already exists:", existingRecipient);
-
-      const uniqueNumber =
-        this.getNumbersFromString(existingRecipient);
-
-      this.updateUniqueDataInMap(inputDataMap, uniqueNumber);
-
-      this.addRecipientToMap(
-        uniqueRecipientKey,
-        existingRecipient
-      );
-
-      inputDataMap.profileName = existingRecipient;
-
-      expect(inputDataMap.profileName).toBeTruthy();
-
+    if (profileName) {
+      console.log(`✅ Reusing existing recipient for ${testcaseId}: ${profileName}`);
+      inputDataMap.profileName = profileName;
       return inputDataMap;
     }
 
-    // -----------------------------------
-    // CASE 2: Check in runtime map
-    // -----------------------------------
-    const runtimeRecipient =
-      this.getRecipientFromMap(uniqueRecipientKey);
+    // 2️⃣ Create new profile name
+    const profileNameFromTestData = inputDataMap?.createRecipient?.profileInformation?.profileName;
+    if (!profileNameFromTestData) throw new Error("Profile name missing in inputDataMap.createRecipient.profileInformation");
 
-    if (runtimeRecipient) {
+    profileName = `${profileNameFromTestData}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    console.log(`🆕 Creating new recipient for ${testcaseId}: ${profileName}`);
 
-      console.log("Recipient already created in this run:", runtimeRecipient);
+    // TODO: call UI/API to actually create recipient here
 
-      const uniqueNumber =
-        this.getNumbersFromString(runtimeRecipient);
+    // 3️⃣ Write to recipient JSON
+    RecipientUtil.writeRecipientName(testcaseId, profileName, recipientFileKey, envName);
 
-      this.updateUniqueDataInMap(inputDataMap, uniqueNumber);
-
-      inputDataMap.profileName = runtimeRecipient;
-
-      return inputDataMap;
-    }
-
-    // -----------------------------------
-    // CASE 3: Create new recipient
-    // -----------------------------------
-    const randomUniqueNumber = this.getRandomNumber();
-
-    console.log("Creating new recipient...");
-
-    this.updateUniqueDataInMap(
-      inputDataMap,
-      randomUniqueNumber
-    );
-
-    const profileName = inputDataMap.profileName;
-
-    expect(profileName).toBeTruthy();
-
-    // Simulate recipient creation
-    this.createRecipient(inputDataMap);
-
-    this.addRecipientToMap(uniqueRecipientKey, profileName);
-
-    console.log("New recipient created:", profileName);
-
-    // Write to JSON
-    const profileNameMap: Record<string, string> = {
-      profileName: profileName
-    };
-
-    RecipientStore.writeRecipientNameIntoJsonFile(
-      profileNameMap,
-      testName,
-      jsonFilePath
-    );
+    // 4️⃣ Update inputDataMap
+    inputDataMap.profileName = profileName;
 
     return inputDataMap;
   }

@@ -1,16 +1,23 @@
 web:
   baseUrl: "https://demowebshop.tricentis.com/" # Base URL for the UAT Green environment
 
-testing:
-  data:
-    interac: 
-      userJsonFile: "src/testdata/${env}/testdata.json" # Path to the JSON file containing test data for UAT Green
-      userJsonFile2: "src/testdata/${env}/testdata2.json" 
+testing: 
+  testDataFiles: 
+    interacTestDataFile: "src/testdata/${env}/interacTestdata.json" # Path to the JSON file containing test data for UAT Green
+    interacTestDataFile2: "src/testdata/${env}/interacTestdata2.json" 
+    paymentTestDataFile1: "src/testdata/${env}/paymentTestdata.json" # Path to the JSON file containing test data for UAT Green
+    paymentTestDataFile2: "src/testdata/${env}/paymentTestdata2.json" 
 
-  propertyFiles:
-    interac: 
-      userJsonFile: "src/testdata/propertyFiles/interac-createPayment-${language}-reference.properties" # Path to the JSON file containing test data for UAT Green
-      userJsonFile2: "src/testdata/propertyFiles/interac-createPayment-${language}-reference2.properties"
+  propertyFiles: 
+    interacUserJsonFile: "src/testdata/propertyFiles/interac-createPayment-${language}-reference.properties" # Path to the JSON file containing test data for UAT Green
+    interacUserJsonFile2: "src/testdata/propertyFiles/interac-createPayment-${language}-reference2.properties"
+    paymentUserJsonFile: "src/testdata/propertyFiles/payment-createPayment-${language}-reference.properties" # Path to the JSON file containing test data for UAT Green
+    paymentUserJsonFile2: "src/testdata/propertyFiles/payment-createPayment-${language}-reference2.properties"
+
+  recipientFiles: 
+    existingRecipientFile: "src/testdata/recipientProfiles/existingRecipient.json" # Path to the JSON file containing existing recipient data for UAT Green
+    interacRecipientProfile: "src/testdata/recipientProfiles/interacRecipientProfile.json" # Path to the JSON file containing Interac recipient profile data for UAT Green
+    paymentRecipientProfile: "src/testdata/recipientProfiles/paymentRecipientProfile.json" # Path to the JSON file containing Interac recipient profile data for UAT Green
 
 db2:
   host: "uat-green-db2.example.com" # DB2 database host for UAT Green

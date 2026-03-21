@@ -1,0 +1,26 @@
+{
+    "testcases": [
+        {
+            "testcase_id": "TC001_CreateInteracPayment",
+            "profileNames":{
+                "profileName - UAT": "ProfileName_123456",
+                "profileName - IST": "ProfileName_654321",
+                "profileName - DEV": "ProfileName_343545"
+            }
+        },
+         {
+            "testcase_id": "TC002_CreateInteracPayment",
+            "profileNames":{
+                "profileName - UAT": "ProfileName_123456",
+            }
+        },
+         {
+            "testcase_id": "TC003_CreateInteracPayment",
+            "profileNames":{
+                "profileName - UAT": "ProfileName_123456",
+                "profileName - IST": "",
+                "profileName - DEV": ""
+            }
+        }
+    ]
+}

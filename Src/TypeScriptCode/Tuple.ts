@@ -34,7 +34,7 @@
         console.log(element); // Output: 1    John    true    25    Smith
     }
 
-// Tuple wiht optional elements
+// Tuple with optional elements
     let employee: [number, string, boolean?] = [101, "David"];
     console.log("tuple with optional elements:");
     console.log(employee); // Output: [101, "David"]

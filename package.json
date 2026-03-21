@@ -1,9 +1,21 @@
 {
   "dependencies": {
-    "prompt-sync": "^4.2.0"
+    "@axe-core/playwright": "^4.11.1",
+    "authenticator": "^1.1.0",
+    "csv-parse": "^6.1.0",
+    "dotenv": "^17.3.1",
+    "otplib": "^12.0.1",
+    "prompt-sync": "^4.2.0",
+    "xlsx": "^0.18.5",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/authenticator": "^1.1.4",
+    "@types/node": "^25.2.3",
     "@types/prompt-sync": "^4.2.3",
+    "allure-playwright": "^3.6.0",
     "tsx": "^4.21.0"
-  }
+  },
+  "scripts": {}
 }

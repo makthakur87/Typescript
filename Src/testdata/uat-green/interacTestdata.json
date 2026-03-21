@@ -1,0 +1,299 @@
+{
+  "testcases": [
+    {
+      "testcase_id": "TC001_TestingData",
+      "testdata": {
+        "language": "English",
+        "createPaymentType": "Create Payment",
+        "createRecipient": {
+          "profileInformation": {
+            "recipientType": "Business",
+            "profileName": "Profile_",
+            "profileEmail": "test@gamil.com",
+            "profilePhoneNumber": "9898989898",
+            "assignServiceGroup": "WireSGWithApprovals S01298300002"
+          },
+          "totalAccounts": "1",
+          "paymentType": "Wire",
+          "paymentDestinationInformation": [
+            {
+              "paymentDestination": "Canada",
+              "recipientBankCountry": "Canada"
+            }
+          ],
+          "recipientBankDetails": [
+            {
+              "routingCode": "Bank/transit",
+              "bankCode": "00018",
+              "bankInstitution": "002 - THE BANK OF NOVA SCOTIA",
+              "bankInstitutionCode": "002",
+              "accountNumber": "21512",
+              "bankAddress": "The Bank of Nova Scotia, 111 2nd Avenue South, Saskatoon, SK, S7K 3R1, Canada"
+            },
+            {
+              "routingCode": "SWIFT",
+              "bankCode": "NOSCCATTBSM",
+              "bankInstitution": "",
+              "bankInstitutionCode": "",
+              "accountNumber": "21512",
+              "bankAddress": "The Bank of Nova Scotia, 44 King Street West, Toronto, ON, M5H 1R1, Canada"
+            }
+          ],
+          "recipientName": "RecipientName",
+          "vendorNumber": "vendorNumber",
+          "recipientAddress": [
+            {
+              "addressLine1": "RBC Plaza",
+              "addressLine2": "2nd Avenue South",
+              "city": "Saskatoon",
+              "provinceState": "",
+              "province": "Ontario",
+              "postalZipCode": "S7K 3R1",
+              "recipientCountry": "Canada",
+              "anotherPaymentType": "EFT",
+              "accountNickName": "Nickname1_"
+            },
+            {
+              "addressLine1": "First Private Inv Mgmt",
+              "addressLine2": "West 8",
+              "city": "Berlin",
+              "provinceState": "BR",
+              "province": "",
+              "postalZipCode": "60327",
+              "recipientCountry": "Germany",
+              "anotherPaymentType": "",
+              "accountNickName": "Nickname2_"
+            }
+          ]
+        },
+        "createPayment": {
+          "selectRecipient": {
+            "serviceGroupName": "WireSGWithApprovals",
+            "recipientAccount": ""
+          },
+          "originatorDetails": {
+            "originatorName": "CCC COMP",
+            "originatorAddress": "",
+            "serviceGroup": "WireSGWithApprovals",
+            "modifyOriginatorAddress": "y",
+            "modifyOriginatorDetails": {
+              "modifyOriginatorName": "",
+              "modifyOriginatorCountry": "",
+              "modifyOriginatorAddressline1": "",
+              "modifyOriginatorAddressline2": "",
+              "modifyOriginatorCity": "",
+              "modifyProvince": "",
+              "modifyProvinceState": "",
+              "modifyPostalZipCode": ""
+            }
+          },
+          "paymentDetails": {
+            "paymentSource": "",
+            "debitAccount": "",
+            "paymentAmount": "",
+            "paymentCurrency": "",
+            "debitCurrency": "",
+            "selectRate": "",
+            "preBookedRate": "",
+            "preBookedRateReference": "",
+            "paymentDateType": "",
+            "accountSetup": ""
+          },
+          "invoices": {
+            "totalInvoices": "",
+            "addInvoices": "",
+            "invoicesAction": "",
+            "totalDeleteInvoices": "",
+            "invoicesDetails": [
+              {
+                "invoiceNumber": "",
+                "invoiceDate": "",
+                "invoiceAmount": "",
+                "invoiceCurrency": "",
+                "invoiceDiscountAmount": "",
+                "invoiceAmountPaid": "",
+                "invoiceRemark": ""
+              }
+            ]
+          },
+          "additionalPaymentSettings": {
+            "internalMemo": "",
+            "informationToRecipient": "",
+            "selectPriorityHandling": "",
+            "bankToBankInfo": "",
+            "bankToBankInfoMessage": ""
+          }
+        },
+        "editPayment": {
+          "editPaymentFlow": "",
+          "editPaymentWithStep4": "",
+          "editPaymentDetails": {
+            "editPaymentSource": "",
+            "editDebitAccount": "",
+            "editPaymentAmount": "",
+            "editPaymentCurrency": "",
+            "editDebitCurrency": "",
+            "editSelectRate": "",
+            "editPreBookedRate": "",
+            "editPreBookedRateReference": ""
+          },
+          "editOriginatorDetails": {
+            "editOriginatorAddress": "",
+            "editOriginatorAddressFields": {
+              "editOriginatorName": "",
+              "editOriginatorCountry": "",
+              "editOriginatorAddressline1": "",
+              "editOriginatorAddressline2": "",
+              "editOriginatorCity": "",
+              "editProvince": "",
+              "editProvinceState": "",
+              "editPostalZipCode": ""
+            }
+          },
+          "editInvoices": {
+            "editInvoices": "",
+            "editAddInvoices": "",
+            "editTotalAddInvoices": "",
+            "editTotalInvoices": "",
+            "editInvoicesAction": "",
+            "editTotalDeleteInvoices": "",
+            "editInvoicesDetails": [
+              {
+                "editInvoiceNumberInfo": "",
+                "editInvoiceNumber": "",
+                "editInvoiceDate": "",
+                "editInvoiceAmount": "",
+                "editInvoiceCurrency": "",
+                "editInvoiceDiscountAmount": "",
+                "editInvoiceAmountPaid": "",
+                "editInvoiceRemark": ""
+              },
+              {
+                "editInvoiceNumberInfo": "",
+                "editInvoiceNumber": "",
+                "editInvoiceDate": "",
+                "editInvoiceAmount": "",
+                "editInvoiceCurrency": "",
+                "editInvoiceDiscountAmount": "",
+                "editInvoiceAmountPaid": "",
+                "editInvoiceRemark": ""
+              }
+            ]
+          },
+          "editAdditionalPaymentSettings": {
+            "editInternalMemo": "",
+            "editInformationToRecipient": "",
+            "editSelectPriorityHandling": "",
+            "editBankToBankInfo": "",
+            "editBankToBankInfoMessage": ""
+          }
+        },
+        "approvePayment": {
+          "isApprovalRequired": "",
+          "isEditApprovalRequired": ""
+        },
+        "submitPayment": {
+          "amountUnderBulletin": "50000",
+          "autoConvert": ""
+        }
+      }
+    },
+    {
+      "testcase_id": "TC002_TestingData",
+      "testdata": {
+        "language": "English",
+        "profile": {
+          "recipientType": "Business",
+          "profileName": "Profile_",
+          "profileEmail": "test@gamil.com",
+          "profilePhoneNumber": 9898989898,
+          "assignServiceGroup": "WireSGWithApprovals S01298300002",
+          "accountNickName": "Nickname1_",
+          "accountNiceName2": "Nickname2_"
+        },
+        "paymentType": 11,
+        "paymentDestination": "Canada",
+        "recipientBankCountry": "Canada",
+        "recipientBankDetails": {
+          "routingCode": "",
+          "bankCode": "",
+          "bankInstitution": "",
+          "bankInstitutionCode": "",
+          "accountNumber": "",
+          "bankAddress": ""
+        },
+        "recipientInformation": {
+          "recipientName": "",
+          "vendorNumber": "",
+          "recipientAddresses": {
+            "addressLine1": "Lane 11",
+            "addressLine2": "Address 11",
+            "city": "Scarborough",
+            "province": "Ontario",
+            "provinceState": "",
+            "postalZipCode": "L6Y 0N7",
+            "recipientCountry": "Canada"
+          }
+        },
+        "addMultiAccountRecipient": "",
+        "multiAccountDetails": {
+          "paymentType": "",
+          "paymentDestination": "",
+          "recipientBankCountry": "",
+          "recipientBankDetails": {
+            "routingCode": "",
+            "bankCode": "",
+            "bankInstitution": "",
+            "bankInstitutionCode": "",
+            "accountNumber": "",
+            "bankAddress": ""
+          },
+          "recipientAddress": {
+            "addressLine1": "",
+            "addressLine2": "",
+            "city": "",
+            "province": "",
+            "provinceState": "",
+            "postalZipCode": "",
+            "recipientCountry": ""
+          }
+        },
+        "isApprovalRequired": "",
+        "isEditApprovalRequired": "",
+        "serviceGroupName": "WireSGWithApprovals",
+        "recipientAccount": "",
+        "selectServiceGroup": "",
+        "paymentDetails": {
+          "paymentSource": "",
+          "paymentAmount": "",
+          "paymentCurrency": "",
+          "selectRate": "",
+          "preBookedRate": "",
+          "preBookedRateReference": "",
+          "internalMemo": "",
+          "informationToRecipient": ""
+        },
+        "paymentDateType": "Current",
+        "currencyType": "CrossCurrency",
+        "amountUnderBulletin": "50000",
+        "additionalPaymentSettings": {
+          "selectPriorityHandling": "",
+          "bankToBankInfo": "",
+          "bankToBankInfoMessage": ""
+        },
+        "originatorDetails": {
+          "originatorName": "CCC COMP",
+          "originatorAddress": "",
+          "originatorCountry": "",
+          "originatorAddressLine1": "",
+          "originatorAddressLine2": "",
+          "originatorCity": "",
+          "originatorState": "",
+          "originatorZipCode": ""
+        },
+        "debitAccount": "",
+        "debitCurrency": ""
+      }
+    }
+  ]
+}

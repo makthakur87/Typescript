@@ -1,0 +1,17 @@
+{
+    "testcases": [{
+        "testcase_id": "TC001",
+        "profileNames": {
+            "profileName - ist": "ProfileName_123456",
+            "profileName - uat": "ProfileName_656565",
+            "profileName - prod": "ProfileName_099888"
+        }
+       },
+       {
+        "testcase_id": "TC002",
+        "profileNames": {
+            "profileName - ist": "ProfileName_234567"
+        }
+       }
+    ]
+}

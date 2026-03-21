@@ -4,7 +4,8 @@
 
 // Abstract methods in an interface are methods that are declared but not implemented. 
 // They serve as a blueprint for classes that implement the interface, requiring them to provide their own implementation of these methods. 
-// Abstract methods in an interface are implicitly abstract, meaning they do not have a body and must be implemented by any class that implements the interface.
+// Abstract methods in an interface are implicitly abstract, meaning they do not have a body and must be implemented by any class 
+// that implements the interface.
 
 // Example of interface declaration and implementation:
 
@@ -150,7 +151,8 @@
     console.log("Dog species:", dog3.species); // Output: Dog species: Golden Retriever
     console.log("Dog color:", dog3.color); // Output: Dog color: Golden
     console.log("Dog age:", Dog.age); // Output: Dog age: 5
-    // note: Since age is a static property, it retains the value assigned to it (5) even when a new instance of the Dog class is created without providing an age. 
+    // note: Since age is a static property, it retains the value assigned to it (5) even when a new instance of the Dog class is created
+    //  without providing an age. 
     // Therefore, dog3 will also have access to the age property with the value of 5.
     console.log("Dog sound:"); dog3.sound(); // Output: Buddy whose color is Golden and age is 5 says: Woof!
 

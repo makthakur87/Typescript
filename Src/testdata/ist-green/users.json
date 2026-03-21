@@ -1,0 +1,37 @@
+{
+  "userList": [
+    {
+      "loginUser":                "abc",
+      "userName":                 "abc@test.com",
+      "userPassword":             "123456",
+      "customerID":               "",
+      "customerUserId":           "",
+      "sendOnlyCustomer":         false,
+      "solePropUser":             true,
+      "enhancedCustomer":         false,
+      "pegaOnboardedCustomer":    false
+    }, 
+    {
+      "loginUser":                "xyz",
+      "userName":                 "abc@test.com",
+      "userPassword":             "123456",
+      "customerID":               "",
+      "customerUserId":           "",
+      "sendOnlyCustomer":         false,
+      "solePropUser":             true,
+      "enhancedCustomer":         false,
+      "pegaOnboardedCustomer":    false
+    },
+    {
+      "loginUser":                "admin",
+      "userName":                 "abc@test.com",
+      "userPassword":             "123456",
+      "customerID":               "",
+      "customerUserId":           "",
+      "sendOnlyCustomer":         false,
+      "solePropUser":             true,
+      "enhancedCustomer":         false,
+      "pegaOnboardedCustomer":    false
+    }
+  ]
+}

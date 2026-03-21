@@ -16,7 +16,7 @@
     console.log(numbers); // Output: [6, 7, 8, 9, 10]
     console.log(names); // Output: ["David", "Eve", "Frank"]
 
-    // Declaration/Assingnment
+    // Declaration/Assignment
     let numbers1: number[] = [1, 2, 3, 4, 5];
     let names1: string[] = ["Alice", "Bob", "Charlie"];
 

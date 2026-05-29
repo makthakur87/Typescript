@@ -1,6 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { headerLocators } from "@pages/pageFactory/headerLocators";
-import { LoginPage } from "./loginPage";
+import { LoginUtils } from "@config/utils/login/loginUtils";
 
 export class HeaderPage {
     private overviewLink: Locator;
@@ -23,8 +23,8 @@ export class HeaderPage {
         const maxLoginAttempts = 3;
 
         // close defer pop up if present before navigating
-        const loginPage = new LoginPage(this.page);
-        await loginPage.handleDeferPopup();
+        const loginUtils = new LoginUtils(this.page);
+        await loginUtils.handleDeferPopup();
 
 
         for (let attempt = 1; attempt <= maxLoginAttempts; attempt++) {
@@ -33,7 +33,7 @@ export class HeaderPage {
                 await this.overviewLink.click();
                 console.log(`Overview link is active after ${attempt - 1} attempts`);
                 // close popup again after navigation
-                await loginPage.handleDeferPopup();
+                await loginUtils.handleDeferPopup();
                 return;
             }
 
@@ -41,7 +41,7 @@ export class HeaderPage {
             await this.page.waitForLoadState("networkidle");
 
             // close popup again after navigation
-            await loginPage.handleDeferPopup();
+            await loginUtils.handleDeferPopup();
         }
 
         throw new Error(`overview link did not become active after ${maxLoginAttempts} attempts`);

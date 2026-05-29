@@ -1,4 +1,3 @@
-// src/config/utils/userLoader.ts
 import * as fs from "fs";
 import * as path from "path";
 
@@ -8,19 +7,20 @@ export type User = {
   userPassword: string;
   customerID: string;
   customerUserId: string;
-  sendOnlyCustomer: boolean;
-  solePropUser: boolean;
   enhancedCustomer: boolean;
-  pegaOnboardedCustomer: boolean;
 };
 
 type UsersFile = {
   userList: User[];
 };
 
+function getUsersFilePath(envName: string): string {
+  return path.resolve(process.cwd(), "src", "testdata", envName, "users.json");
+}
+
 export function loadUsers(envName: string, loginUser: string): User {
   // Example path: src/testData/ist-green/users.json
-  const filePath = path.resolve(process.cwd(), "src", "testdata", envName, "users.json");
+  const filePath = getUsersFilePath(envName);
 
   if (!fs.existsSync(filePath)) {
     throw new Error(
@@ -55,4 +55,28 @@ export function loadUsers(envName: string, loginUser: string): User {
   }
 
   return user;
+}
+
+let userPoolIndex = 0;
+
+export function getUserFromPool(envName: string) {
+  const filePath = getUsersFilePath(envName);
+  const content = fs.readFileSync(filePath, "utf-8");
+  let parsed: UsersFile;
+  try {
+    parsed = JSON.parse(content) as UsersFile;
+  } catch (err) {
+    throw new Error(
+      `Failed to parse users file for enviornment '${envName}' as path '${filePath}': Error: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
+  const users = parsed.userList;
+
+  if (!users || users.length === 0) {
+    throw new Error(`User pool is empty for environment: ${envName}`);
+  }
+
+  const user = users[userPoolIndex % users.length];
+  userPoolIndex++;
+  return user.loginUser;
 }

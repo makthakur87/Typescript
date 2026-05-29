@@ -8,7 +8,7 @@
       "customerUserId":           "",
       "sendOnlyCustomer":         false,
       "solePropUser":             true,
-      "enhancedCustomer":         false,
+      "enhancedCustomer":         true,
       "pegaOnboardedCustomer":    false
     },
     {

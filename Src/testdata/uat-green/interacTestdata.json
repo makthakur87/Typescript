@@ -7,62 +7,54 @@
         "createPaymentType": "Create Payment",
         "createRecipient": {
           "profileInformation": {
-            "recipientType": "Business",
+            "profileType": "Business",
             "profileName": "Profile_",
-            "profileEmail": "test@gamil.com",
+            "profileEmail": "test@gmail.com",
             "profilePhoneNumber": "9898989898",
-            "assignServiceGroup": "WireSGWithApprovals S01298300002"
+            "addServiceGroup": "Yes",
+            "profileServiceGroup": "ABC SG S01298300002"
           },
-          "totalAccounts": "1",
-          "paymentType": "Wire",
-          "paymentDestinationInformation": [
+          "recipients": [
             {
+              "paymentType": "Interac",
+              "transferFundType": "EMAIL", 
               "paymentDestination": "Canada",
-              "recipientBankCountry": "Canada"
-            }
-          ],
-          "recipientBankDetails": [
-            {
-              "routingCode": "Bank/transit",
-              "bankCode": "00018",
-              "bankInstitution": "002 - THE BANK OF NOVA SCOTIA",
-              "bankInstitutionCode": "002",
-              "accountNumber": "21512",
-              "bankAddress": "The Bank of Nova Scotia, 111 2nd Avenue South, Saskatoon, SK, S7K 3R1, Canada"
+              "recipientBankCountry": "Canada",
+              "bankDetails": {
+                "transitNumber": "",
+                "bankInstitution": "",
+                "bankInstitutionCode": "",
+                "accountNumber": ""
+              },
+
+              "recipientAddress": {
+                "recipientName": "RecipientName",
+                "recipientEmailAddress": "test@gmail.com",
+                "notificationEmailAddress": "",
+                "notificationLanguage": "",
+                "accountNickName": "Nickname1_"
+              }
             },
             {
-              "routingCode": "SWIFT",
-              "bankCode": "NOSCCATTBSM",
-              "bankInstitution": "",
-              "bankInstitutionCode": "",
-              "accountNumber": "21512",
-              "bankAddress": "The Bank of Nova Scotia, 44 King Street West, Toronto, ON, M5H 1R1, Canada"
-            }
-          ],
-          "recipientName": "RecipientName",
-          "vendorNumber": "vendorNumber",
-          "recipientAddress": [
-            {
-              "addressLine1": "RBC Plaza",
-              "addressLine2": "2nd Avenue South",
-              "city": "Saskatoon",
-              "provinceState": "",
-              "province": "Ontario",
-              "postalZipCode": "S7K 3R1",
-              "recipientCountry": "Canada",
-              "anotherPaymentType": "EFT",
-              "accountNickName": "Nickname1_"
-            },
-            {
-              "addressLine1": "First Private Inv Mgmt",
-              "addressLine2": "West 8",
-              "city": "Berlin",
-              "provinceState": "BR",
-              "province": "",
-              "postalZipCode": "60327",
-              "recipientCountry": "Germany",
-              "anotherPaymentType": "",
-              "accountNickName": "Nickname2_"
+              "paymentType": "Interac",
+              "transferFundType": "ANN",
+              "paymentDestination": "Canada",
+              "recipientBankCountry": "Canada",
+
+              "bankDetails": {
+                "transitNumber": "",
+                "bankInstitution": "",
+                "bankInstitutionCode": "",
+                "accountNumber": ""
+              },
+
+              "recipientAddress": {
+                "recipientName": "RecipientName",
+                "recipientEmailAddress": "test@gmail.com",
+                "notificationEmailAddress": "",
+                "notificationLanguage": "",
+                "accountNickName": "Nickname2_"
+              }
             }
           ]
         },

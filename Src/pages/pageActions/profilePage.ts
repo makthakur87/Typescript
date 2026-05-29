@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { LoginPage } from "@config/utils/login/loginPage";
+import { LoginPage } from "@pages/pageActions/loginPage";
 
 export class ProfilePage {
     readonly page: Page;
@@ -16,6 +16,14 @@ export class ProfilePage {
 
     async isProfileIconVisible() {
         return await this.page.locator("css=selector-for-profile-icon").isVisible();
+    }
+
+    async clickOnProfileIcon() {
+        await this.page.locator("css=selector-for-profile-icon").click();
+    }
+
+    async clickOnMyProfile() {
+        await this.page.locator("text=My Profile").click();
     }
     
     async navigateToProfile() {

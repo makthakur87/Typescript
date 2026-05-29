@@ -1,185 +1,177 @@
-import { RecipientUtil } from "@config/utils/recipientUtil";
+import { JsonUtils } from "@config/utils/JsonUtils";
 import { EnvLoader } from "@config/loaders/envLoader";
+import { PropertyUtils } from "@config/utils/PropertyUtils";
+import { CommonFunctions } from "@config/utils/CommonFunctions";
+import { RecipientUtils } from "@config/utils/RecipientUtils";
+import { HeaderPage } from "@pages/pageActions/headerPage";
+import { RecipientPage } from "@pages/pageActions/createRecipientPage";
+import { Page } from "@playwright/test";
+import { fillPageFields, page1Fields, page2Fields } from "@config/reusable_functions/recipientHandler";
+import { createRecipientLocators } from "@pages/pageFactory/createRecipientLocators";
+
+export enum RecipientType {
+    SINGLE = "SINGLE",
+    MULTIPLE = "MULTIPLE",
+    NONE = "NONE"
+}
 
 export class RecipientService {
+  private static commonFunctions = CommonFunctions.getInstance();
+
   /**
    * Create or fetch recipient for a testcase
    * Fully generic: only inputDataMap is required
    */
-  public static createOrFetchRecipient(inputDataMap: Record<string, any>): Record<string, any> {
+  async createOrFetchRecipient(page: Page,inputDataMap: Record<string, any>): Promise<Record<string, any>> {
     const testcaseId = inputDataMap.testcaseName || inputDataMap.testcase_id;
     if (!testcaseId) throw new Error("testcaseName or testcase_id is required in inputDataMap");
 
-    const recipientFileKey = inputDataMap.recipientFileKey || "interacRecipientProfile"; // default module key
-    const envName = inputDataMap.envName || process.env.ENV_NAME;
+    // resolve environment and ensure envLoader is initialized to load recipient file paths
+    const envName = inputDataMap.envName || process.env.ENV_NAME || "uat-green";
+    const envNameUpper = envName.toUpperCase();
+    if (!Object.keys(EnvLoader.recipientFilePaths).length) {
+      EnvLoader.loadEnvironment(envName);
+    }
 
-    // 1️⃣ Check if profile already exists
-    let profileName = RecipientUtil.readRecipientName(testcaseId, recipientFileKey, envName);
+    inputDataMap.envName = envName;
+    const recipientFileKey = "interacRecipientProfile"; // default module key for recipient file path, can be extended to be dynamic based on inputDataMap if needed
+    const recipientUtils = new RecipientUtils();
 
-    if (profileName) {
-      console.log(`✅ Reusing existing recipient for ${testcaseId}: ${profileName}`);
-      inputDataMap.profileName = profileName;
+    // step 1: look up for profileName for current testcase_id + env in the JSON file, if found → use it
+    const existingProfileName = JsonUtils.readRecipientName(testcaseId, recipientFileKey, envName);
+    // const uniqueRecipientString = await recipientUtils.createUniqueRecipientString(inputDataMap);
+    if (existingProfileName) {
+      // Reuse: rebuild dependent fields (users numeric sufffix from existing profile name and update inputDataMap) → return inputDataMap with profileName
+      const suffix = RecipientService.commonFunctions.getNumbersFromString(existingProfileName);
+      await recipientUtils.updateUniqueDataInProfileMap(inputDataMap, suffix);
+      inputDataMap.profileName = existingProfileName;
+      console.info(`[${testcaseId}] Profile already exists in JSON for env: '${envName}' : '${existingProfileName}' - skipping recipient creation`);
       return inputDataMap;
     }
 
-    // 2️⃣ Create new profile name
-    const profileNameFromTestData = inputDataMap?.createRecipient?.profileInformation?.profileName;
-    if (!profileNameFromTestData) throw new Error("Profile name missing in inputDataMap.createRecipient.profileInformation");
+    // Step 2: If not found in JSON for current testcase_id, create new recipient and write profileName back to JSON file for future reuse
+    console.info(`[${testcaseId}] No existing profile found in JSON for env: '${envName}' - proceeding to create recipient`); 
+    RecipientService.commonFunctions.setRandomUniqueNumber(RecipientService.commonFunctions.getRandomNumber());
+    const randomNumber = RecipientService.commonFunctions.getrandomUniqueNumber() || "";
+    await recipientUtils.updateUniqueDataInProfileMap(inputDataMap, randomNumber);
 
-    profileName = `${profileNameFromTestData}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    console.log(`🆕 Creating new recipient for ${testcaseId}: ${profileName}`);
-
-    // TODO: call UI/API to actually create recipient here
-
-    // 3️⃣ Write to recipient JSON
-    RecipientUtil.writeRecipientName(testcaseId, profileName, recipientFileKey, envName);
-
-    // 4️⃣ Update inputDataMap
-    inputDataMap.profileName = profileName;
-
-    return inputDataMap;
-  }
-
-  // -----------------------------------
-  // Unique recipient key (Java stream equivalent)
-  // -----------------------------------
-
-  static createUniqueRecipientString(
-    inputDataMap: Record<string, any>
-  ) {
-
-    return Object.values(inputDataMap)
-      .map(v => this.convertToString(v))
-      .join(",");
-  }
-
-  static convertToString(value: any): string {
-
-    if (Array.isArray(value)) {
-      return value.join(",");
-    }
-
-    if (typeof value === "object") {
-      return JSON.stringify(value);
-    }
-
-    return String(value);
-  }
-
-  // -----------------------------------
-  // Update profile name
-  // -----------------------------------
-
-  static updateUniqueDataInMap(
-    inputDataMap: Record<string, any>,
-    uniqueNumber: string
-  ) {
-
-    let profileName =
-      inputDataMap?.createRecipient?.profileInformation?.profileName;
-
-    profileName = this.appendUniqueNumber(
-      profileName,
-      uniqueNumber,
-      PaymentConstants.PROFILE_NAME_MAX_LENGTH
-    );
-
-    inputDataMap.profileName = profileName;
-
-    expect(profileName).toBeTruthy();
-
-    return inputDataMap;
-  }
-
-  static appendUniqueNumber(
-    name: string,
-    uniqueNumber: string,
-    maxLength: number
-  ) {
-
-    if (!name) return name;
-
-    if (name.length >= maxLength) {
-
-      name =
-        name.substring(0, maxLength - uniqueNumber.length) +
-        uniqueNumber;
-
+    const paymentType = (JsonUtils.getStringValueFromList(inputDataMap, "testdata.createRecipient.recipients[0].paymentType") || "").toLowerCase();
+    let recipientType: RecipientType;
+    if (paymentType === "interac e-transfer") {
+      // profileName is set on inoputDataMap as a side effect of updateUniqueDataInProfileMap method.
+      recipientType = await this.createRecipient(page, inputDataMap);
+      console.info(`[${testcaseId}] Interac recipient created with profileName: '${inputDataMap.profileName}' for env: '${envName}'`);
     } else {
-
-      name = name + uniqueNumber;
-
-      if (name.length > maxLength) {
-        name = name.substring(0, maxLength);
-      }
+      console.warn(`[${testcaseId}] Unsupported payment type for recipient creation: '${paymentType}' for env: '${envName}'`);
+      throw new Error(` [${testcaseId}] Unsupported payment type for recipient creation: '${paymentType}'`);
     }
 
-    return name;
+    if (!inputDataMap.profileName) {
+      throw new Error(`[${testcaseId}] Recipient creation failed - profileName not set in inputDataMap after creation flow for env: '${envName}'`);
+    }
+
+    if (recipientType === RecipientType.NONE) {
+      throw new Error(`[${testcaseId}] Recipient creation failed for env: '${envName}' - profileName ${inputDataMap.profileName} will not be persisted to JSON`);
+    }
+
+    if (recipientType === RecipientType.SINGLE) {
+      console.info(`[${testcaseId}] Recipient creation successful → SINGLE recipient profile created with profileName: '${inputDataMap.profileName}' for env: '${envName}'`);
+      this.persistProfileToJson(testcaseId, envNameUpper, recipientFileKey, inputDataMap.profileName);
+      console.info(`[${testcaseId}] Recipient profile persisted to JSON for env: '${envName}' with profileName: '${inputDataMap.profileName}'`);
+      return inputDataMap;
+    }
+
+    if (recipientType === RecipientType.MULTIPLE) {
+      console.info(`[${testcaseId}] Recipient creation successful → MULTI recipient profile created with profileName: '${inputDataMap.profileName}' for env: '${envName}'`);
+      this.persistProfileToJson(testcaseId, envNameUpper, recipientFileKey, inputDataMap.profileName);
+      console.info(`[${testcaseId}] Recipient profile persisted to JSON for env: '${envName}' with profileName: '${inputDataMap.profileName}'`);
+      return inputDataMap;
+    }
+
+    return inputDataMap;
   }
 
-  // -----------------------------------
-  // Map operations
-  // -----------------------------------
-
-  static addRecipientToMap(
-    uniqueKey: string,
-    recipientName: string
-  ) {
-    this.recipientMap.set(uniqueKey, recipientName);
+  /**
+   * Persist recipient profile to JSON file for future reuse based on testcase_id and envName
+   * 
+   * @param testcaseId 
+   * @param envNameUpper 
+   * @param recipientFileKey 
+   * @param profileName 
+   */
+  private persistProfileToJson(testcaseId: string, envNameUpper: string, recipientFileKey: string, profileName: string): void {
+    const envKey =`profileName - ${envNameUpper.replace(/-/g, "")}`;
+    const profileNameMap: Record<string, string> = { [envKey]: profileName };
+    const recipientFIlePath = EnvLoader.getRecipientProfileFilePath(recipientFileKey);
+    JsonUtils.writeRecipientNameIntoJsonFile(profileNameMap, testcaseId, recipientFIlePath);
+    console.info(`Recipient profile written to JSON for testcase '${testcaseId}' and env '${envNameUpper}': ${JSON.stringify(profileNameMap)}`);
   }
 
-  static getRecipientFromMap(uniqueKey: string) {
-    return this.recipientMap.get(uniqueKey) || null;
-  }
 
-  // -----------------------------------
-  // JSON reader
-  // -----------------------------------
+  /**
+   * Creates a new recipient profile
+   * 
+   * @param page          
+   * @param inputData 
+   * @param recipientFileKey  
+   */
 
-  static getRecipientFromJson(
-    testName: string,
-    jsonFilePath: string
-  ) {
+  async createRecipient(page: Page, inputData: Record<string, any>): Promise<RecipientType> {
+    const headerPage = new HeaderPage(page);
+    await PropertyUtils.load("interacPropertyFile");
+    await headerPage.navigateToCreateRecipient();
+    await headerPage.clickAddOrManageRecipients();
 
-    if (!fs.existsSync(jsonFilePath)) return null;
+    const recipients = JsonUtils.getListFromMap(inputData, "testdata.createRecipient.recipients");
+    if (!recipients || recipients.length === 0) {
+        throw new Error("At least one recipient is required in inputData to create a recipient profile");
+    }
 
-    const root = JSON.parse(
-      fs.readFileSync(jsonFilePath, "utf-8")
-    );
+    // PAGE 1
+    await fillPageFields(page, inputData, page1Fields);
+    await page.waitForLoadState("domcontentloaded");
+    await page.waitForURL(/saveRecipientProfile/i, { timeout: 3000 }).catch(() => null);
+    await page.locator(createRecipientLocators.recipinentDestination).waitFor({ state: "visible", timeout: 3000 });
 
-    const testcase = root.testcases?.find(
-      (tc: any) => tc.testcase_id === testName
-    );
+    // PAGE 2
+    for (let i = 0; i < recipients.length; i++) {
+        const recip = recipients[i];
+        console.info(`Handling recipient ${i + 1} of ${recipients.length}`);
 
-    if (!testcase) return null;
+        const scopedData = { ...inputData, currentRecipient: recip, recipientIndex: i + 1 };
+        await fillPageFields(page, scopedData, page2Fields);
+        await page.waitForLoadState("domcontentloaded");
 
-    return testcase.profileNames?.profileName || null;
-  }
+        const isLast = i === recipients.length - 1;
+        if (!isLast) {
+            const addAnotherButton = page.locator(createRecipientLocators.addAnotherRecipient);
+            await addAnotherButton.waitFor({ state: "visible" });
+            await addAnotherButton.scrollIntoViewIfNeeded();
+            await addAnotherButton.click();
+            await page.waitForLoadState("domcontentloaded");
+        }
+    }
 
-  // -----------------------------------
-  // Utility functions
-  // -----------------------------------
+    // SUCCESS MESSAGE VERIFICATION
+    await PropertyUtils.load("interacPropertyFilePath");
+    const expectedSingleMsg = PropertyUtils.getPropertyValue("interac.createRecipient.singleRecipientMessage") || "";
+    const expectedMultiMsg = PropertyUtils.getPropertyValue("interac.createRecipient.multiRecipientMessage") || "";
+    const recipientPage = new RecipientPage(page);
+    const recipientType = await recipientPage.verifyRecipientCreation(expectedSingleMsg, expectedMultiMsg);
 
-  static getNumbersFromString(value: string): string {
+    if (recipientType === RecipientType.SINGLE) {
+        console.info("Recipient creation successful → SINGLE recipient profile created");
+    } else if (recipientType === RecipientType.MULTIPLE) {
+        console.info("Recipient creation successful → MULTI recipient profile created");
+    } else {
+        console.warn("Recipient creation did NOT complete successfully → returning NONE");
+    }
 
-    const numbers = value.match(/\d+/g);
+    if (!inputData.profileName) {
+        throw new Error("Recipient creation flow did not set profileName in inputDataMap");
+    }
 
-    return numbers ? numbers.join("") : "";
-  }
-
-  static getRandomNumber(): string {
-
-    return Math.floor(Math.random() * 100000).toString();
-  }
-
-  // -----------------------------------
-  // Placeholder for UI/API recipient creation
-  // -----------------------------------
-
-  static createRecipient(inputData: any) {
-
-    console.log("Creating recipient in system:", inputData.profileName);
-
-    expect(inputData.profileName).toBeTruthy();
+    return recipientType; // RecipientType.SINGLE | RecipientType.MULTIPLE | RecipientType.NONE
   }
 }
+

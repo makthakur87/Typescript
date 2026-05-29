@@ -9,12 +9,14 @@ import { test, expect } from "../fixtures/loginFixture";
 
 test.use({ testDataFileKeys: ["interacTestDataFile"], propertyFileKeys: ["interacUserJsonFile"], recipientFileKeys: ["existingRecipientFile"] });
 
+test.use({ aliasName: "describeUser" });
+
 test.describe("Login", () => {
   test("Dashboard is visible", async ({ page }) => {
     await expect(page.locator("text=Dashboard")).toBeVisible();
   });
 
-  test("multi-user payment workflow", async ({ multiUserManager }) => {
+  test("multi-user payment workflow", async ({ loggedInContext, multiUserManager }) => {
     const user1 = "user1"; // alias from userLoader.json
     const user2 = "user2"; // alias from userLoader.json
 
@@ -43,12 +45,15 @@ test.describe("Login", () => {
     // submit payment
     // await submitPayment();
 
-     const profileName = interac_Create_Approve_Submit_Payment(multiUserManager);
+     const profileName = interac_Create_Approve_Submit_Payment(loggedInContext.persistentLoginPage, multiUserManager);
   });
 
   test.afterAll(async ({ multiUserManager }) => {
     await multiUserManager.logout();
 
+    // https://restful-booker.herokuapp.com/apidoc/index.html
    
   });
+
+ 
 });

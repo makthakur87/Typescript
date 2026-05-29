@@ -1,5 +1,3 @@
-// src/config/utils/envLoader.ts
-// src/config/utils/envLoader.ts
 import fs from "fs";
 import path from "path";
 import { parse as parseYaml } from "yaml";
@@ -35,6 +33,13 @@ export class EnvLoader {
   public static propertyFilePaths: Record<string, string> = {};
   public static recipientFilePaths: Record<string, string> = {};
 
+  /**
+   * loads environment configuration from YAML files with spring boot-style profile support
+   * 
+   * @param envName 
+   * @param language 
+   * @returns 
+   */
   public static loadEnvironment(envName: string, language: string = "en"): EnvConfig {
     const configDir = path.resolve(process.cwd(), "src", "config", "resources");
     const profileFile = path.join(configDir, `application-${envName}.yaml`);
@@ -104,7 +109,7 @@ export class EnvLoader {
     return this.propertyFilePaths[key];
   }
 
-  public static getRecipientFilePath(key: string): string {
+  public static getRecipientProfileFilePath(key: string): string {
     return this.recipientFilePaths[key];
   }
 

@@ -45,12 +45,8 @@ export default defineConfig({
   testDir: './src/Playwright', // Specify the test directory.
   testMatch: '**/*.spec.ts', // Only run test files with .spec.ts extension
   // fullyParallel: true, // Run all tests in parallel.
-  fullyParallel: debugMode ? false : false, // Disable parallel execution when debugging to simplify the process, otherwise enable it for faster execution
-  forbidOnly: !!process.env.CI, // Fail the build on CI if you accidentally left test.only in the source code.
-  // retries: process.env.CI ? 2 : 0, // Retry on CI only
-  retries: debugMode ? 0 : 0, // disable retries when debugging to simplify the process, otherwise set it to 2 for better stability in CI environments while still providing fast feedback during local development
-  // workers: process.env.CI ? 1 : undefined, // Opt out of parallel tests on CI.
-  workers: debugMode ? 1 : 2, // Use a single worker when debugging to simplify the process, otherwise use 2 workers for faster execution
+
+  // Use a single worker when debugging to simplify the process, otherwise use 2 workers for faster execution
   // grep: process.env.GREP ? new RegExp(process.env.GREP) : undefined, // Use GREP environment variable to filter tests by name or tag when needed, otherwise run all tests
   // grepInvert: process.env.GREP_INVERT ? new RegExp(process.env.GREP_INVERT) : undefined, // Use GREP_INVERT environment variable to exclude tests by name or tag when needed, otherwise do not exclude any tests
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */

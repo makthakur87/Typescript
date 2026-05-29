@@ -1,5 +1,5 @@
 import { chromium, Browser, BrowserContext, Page } from "@playwright/test";
-import { LoginPage } from "@config/utils/login/loginPage";
+import { LoginPage } from "@pages/pageActions/loginPage";
 
 export type GlobalSessions = Record<string, { context: BrowserContext; page: Page }>;
 

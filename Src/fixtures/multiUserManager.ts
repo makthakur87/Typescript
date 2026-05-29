@@ -1,8 +1,8 @@
 // src/fixtures/multiUserManager.ts
 import { Page } from "@playwright/test";
-import { LoginPage } from "@config/utils/login/loginPage";
+import { LoginPage } from "@pages/pageActions/loginPage";
 import { loadUsers, User } from "@config/loaders/userLoader";
-import { ProfilePage } from "@config/utils/login/profilePage";
+import { ProfilePage } from "@pages/pageActions/profilePage";
 
 export class MultiUserManager {
   private persistentLoginPage: Page;

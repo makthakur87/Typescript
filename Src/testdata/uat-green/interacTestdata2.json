@@ -41,7 +41,7 @@
           ],
           "recipientName": "RecipientName",
           "vendorNumber": "vendorNumber",
-          "recipientAddress": [
+          "recipientAddresses": [
             {
               "addressLine1": "RBC Plaza",
               "addressLine2": "2nd Avenue South",

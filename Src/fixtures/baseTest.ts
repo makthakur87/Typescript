@@ -1,6 +1,6 @@
 // src/tests/baseTest.ts
 import { test as base } from "@playwright/test";
-import { LoginPage } from "../config/utils/login/loginPage";
+import { LoginPage } from "../pages/pageActions/loginPage";
 
 type CustomFixtures = {
   loginPage: LoginPage;

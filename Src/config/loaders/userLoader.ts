@@ -24,7 +24,7 @@ export function loadUsers(envName: string, loginUser: string): User {
 
   if (!fs.existsSync(filePath)) {
     throw new Error(
-      `Users file not found for environment '${envName}' at path: ${filePath}`
+      `Users file is not found for environment '${envName}' at path: ${filePath}`
     );
   }
 
@@ -35,9 +35,8 @@ export function loadUsers(envName: string, loginUser: string): User {
     parsed = JSON.parse(content) as UsersFile;
   } catch (err) {
     throw new Error(
-      `Failed to parse users file for environment '${envName}' at path: ${filePath}. Error: ${
-        err instanceof Error ? err.message : String(err)
-      }`
+      `Failed to parse users file for environment '${envName}' at path: ${filePath}: 
+      Error: ${err instanceof Error ? err.message : String(err)}`
     );
   }
 
@@ -49,8 +48,9 @@ export function loadUsers(envName: string, loginUser: string): User {
 
   const user = parsed.userList.find((u) => u.loginUser === loginUser);
   if (!user) {
+    const availableUsers = parsed.userList.map((u) => u.loginUser).join(", ");
     throw new Error(
-      `User with loginUser '${loginUser}' not found in users file for environment '${envName}' at path: ${filePath}`
+      `User with loginUser '${loginUser}' is not found in users file for environment '${envName}' at path: ${filePath}. Available users: [${availableUsers} || "None"]`
     );
   }
 
@@ -58,8 +58,8 @@ export function loadUsers(envName: string, loginUser: string): User {
 }
 
 let userPoolIndex = 0;
-
 export function getUserFromPool(envName: string) {
+  // load all users from the users.json file for the given environment and return one user in a round-robin fashion
   const filePath = getUsersFilePath(envName);
   const content = fs.readFileSync(filePath, "utf-8");
   let parsed: UsersFile;

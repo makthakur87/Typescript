@@ -4,7 +4,7 @@ import { JsonUtils } from "@config/utils/JsonUtils";
 import  { test as base } from "@fixtures/loginFixture";
 import { MultiUserManager } from "@fixtures/multiUserManager";
 import { TestInfo, Page } from "@playwright/test";
-import { RecipientService } from "service/CreateRecipient/CreateRecipientService";
+import { RecipientService } from "@config/service/CreateRecipient/CreateRecipientService";
 import { HeaderPage } from "@pages/pageActions/headerPage";
 
 const testDataFile = ["interacTestDataFile"];

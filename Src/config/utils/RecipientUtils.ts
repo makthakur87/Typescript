@@ -72,7 +72,7 @@ export class RecipientUtils {
 
 
     // update unique data in input map based on existing profile name (for both JSON and in-memory scenarios)
-  async updateUniqueData(inputDataMap: any, randomUniqueNumber: string) {
+  async updateUniqueDataInProfileMap(inputDataMap: any, randomUniqueNumber: string) {
     // PROFILE NAME
     let profileName = JsonUtils.getStringValue(inputDataMap, "createRecipient.profileInformation.profileName") || "";
 
@@ -168,7 +168,7 @@ export class RecipientUtils {
     return updated.length > maxLength ? updated.substring(0, maxLength) : updated;
   }
 
-  async updateUniqueDataInProfileMap(inputDataMap: any, randomUniqueNumber: string) {
+  async updateUniqueData(inputDataMap: any, randomUniqueNumber: string) {
     let profileName = JsonUtils.getStringValue(inputDataMap, "testdata.createRecipient.profileInformation.profileName") || "";
     const updatedProfileName = this.appendUniqueNumberToStr(profileName, randomUniqueNumber, PaymentConstants.PROFILE_NAME_MAX_LENGTH);
     inputDataMap["profileName"] = updatedProfileName;

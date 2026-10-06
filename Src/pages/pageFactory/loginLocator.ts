@@ -11,5 +11,7 @@ export const LoginLocators = {
   securityAnswer: "#SecurityAnswer",
   continueButton: "input.button-1.continue-button",
   retryButton: "input.button-1.retry-button",
-  dashboardHeader: "a.ico-logout"
+  dashboardHeader: "a.ico-logout",
+  deferbutton: "input.button-1.defer-button",
+  overview: "div.overview",
 };

@@ -1,6 +1,6 @@
 import { createRecipientLocators } from "@pages/pageFactory/createRecipientLocators";
 import { Page, Locator } from "@playwright/test";
-import { RecipientType } from "service/CreateRecipient/CreateRecipientService";
+import { RecipientType } from "@config/service/CreateRecipient/CreateRecipientService";
 
 export class RecipientPage {
     page: Page;

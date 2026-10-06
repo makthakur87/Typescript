@@ -25,30 +25,36 @@ export class HeaderPage {
         // close defer pop up if present before navigating
         const loginUtils = new LoginUtils(this.page);
         await loginUtils.handleDeferPopup();
-
+        await this.page.waitForLoadState("domcontentloaded");
+        await loginUtils.handleOneTrustPopupIfPresent();
 
         for (let attempt = 1; attempt <= maxLoginAttempts; attempt++) {
             const classValue = await this.overviewLink.getAttribute("class");
             if (classValue?.toLowerCase().includes("active")) {
                 await this.overviewLink.click();
                 console.log(`Overview link is active after ${attempt - 1} attempts`);
+
                 // close popup again after navigation
                 await loginUtils.handleDeferPopup();
+                await this.page.waitForLoadState("domcontentloaded");
+                await loginUtils.handleOneTrustPopupIfPresent();
                 return;
             }
 
             await this.overviewLink.click().catch(() => null);
-            await this.page.waitForLoadState("networkidle");
+            await this.page.waitForLoadState("domcontentloaded");
 
             // close popup again after navigation
             await loginUtils.handleDeferPopup();
+            await this.page.waitForLoadState("domcontentloaded");
+            await loginUtils.handleOneTrustPopupIfPresent();    
         }
 
         throw new Error(`overview link did not become active after ${maxLoginAttempts} attempts`);
     }
 
     async navigateToCreateRecipient() {
-        await this.page.waitForLoadState("networkidle");
+        // await this.page.waitForLoadState("networkidle");
 
         if (await this.isCreateRecipientPresentAtOverviewPage()) {
             await this.clickCreateRecipientOnOverviewPage();

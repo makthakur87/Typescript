@@ -26,7 +26,6 @@
                 "bankInstitutionCode": "",
                 "accountNumber": ""
               },
-
               "recipientAddress": {
                 "recipientName": "RecipientName",
                 "recipientEmailAddress": "test@gmail.com",
@@ -59,61 +58,49 @@
           ]
         },
         "createPayment": {
+          
           "selectRecipient": {
-            "serviceGroupName": "WireSGWithApprovals",
-            "recipientAccount": ""
+            "selectRecipientAccount": "",
+            "selectServiceGroupName": "",
+            "selectPaymentType": ""
           },
-          "originatorDetails": {
-            "originatorName": "CCC COMP",
-            "originatorAddress": "",
-            "serviceGroup": "WireSGWithApprovals",
-            "modifyOriginatorAddress": "y",
-            "modifyOriginatorDetails": {
-              "modifyOriginatorName": "",
-              "modifyOriginatorCountry": "",
-              "modifyOriginatorAddressline1": "",
-              "modifyOriginatorAddressline2": "",
-              "modifyOriginatorCity": "",
-              "modifyProvince": "",
-              "modifyProvinceState": "",
-              "modifyPostalZipCode": ""
-            }
+          "paymentContext": {
+            "transferFundType": "",
+            "isAutoDepositEnabled": "",
+            "hasBothOptions": "",
+            "selectOption": ""
           },
           "paymentDetails": {
             "paymentSource": "",
             "debitAccount": "",
             "paymentAmount": "",
-            "paymentCurrency": "",
-            "debitCurrency": "",
-            "selectRate": "",
-            "preBookedRate": "",
-            "preBookedRateReference": "",
-            "paymentDateType": "",
-            "accountSetup": ""
+            "currency": "",
+            "securityQuestion": "",
+            "securityAnswer": ""
           },
-          "invoices": {
-            "totalInvoices": "",
-            "addInvoices": "",
-            "invoicesAction": "",
-            "totalDeleteInvoices": "",
-            "invoicesDetails": [
-              {
-                "invoiceNumber": "",
-                "invoiceDate": "",
-                "invoiceAmount": "",
-                "invoiceCurrency": "",
-                "invoiceDiscountAmount": "",
-                "invoiceAmountPaid": "",
-                "invoiceRemark": ""
-              }
-            ]
-          },
-          "additionalPaymentSettings": {
-            "internalMemo": "",
-            "informationToRecipient": "",
-            "selectPriorityHandling": "",
-            "bankToBankInfo": "",
-            "bankToBankInfoMessage": ""
+          "messageToRecipient": {
+            "messageType": "",
+            "simpleMemo": {
+              "value": ""
+            },
+            "invoices": {
+              "isEnabled": "",
+              "invoiceActions": {
+                "invoiceAdd": "",
+                "invoiceDelete": "",
+                "invoiceEdit": ""
+              },
+              "invoiceList": [
+                {
+                  "invoiceNumber": "",
+                  "invoiceDate": "",
+                  "invoiceAmount": "",
+                  "invoiceDiscountAmount": "",
+                  "invoiceAmountPaid": "",
+                  "invoiceRemark": ""
+                }
+              ]
+            }
           }
         },
         "editPayment": {

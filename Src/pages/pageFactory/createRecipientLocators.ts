@@ -1,5 +1,3 @@
-import { profile } from "node:console";
-
 export const createRecipientLocators = {
     profileTypeBusiness: 'input[name="profileType"][value="business"]',
     profileTypeIndividual: 'input[name="profileType"][value="individual"]',
